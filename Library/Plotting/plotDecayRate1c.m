@@ -1,0 +1,46 @@
+function [ output_args ] = plotDecayRate1c( analyVar, indivDataset )
+
+Functional_Form = @(coeffs,x) coeffs(1)*x+coeffs(2);
+
+    figure(10000)
+    hold on
+    
+    x_data      = indivDataset{1}.densityvector;
+    warning('need to generalize')
+    y_data      = analyVar.AvgAvgDecayRate;
+    y_errors    = analyVar.AvgAvgDecayRate_STD;
+    
+%     [x_data y_data y_errors]
+    
+        plothan=errorbar(...
+            x_data,...
+            y_data,...
+            y_errors,...
+            analyVar.MARKERS2{1},...
+            'Color',analyVar.COLORS(1,:),...
+            'MarkerSize',analyVar.markerSize);
+            
+        
+        fitIndVar = linspace(0,max(x_data),1e4)';
+        fitdataHan = ...
+            plot(...
+            fitIndVar,...
+            Functional_Form(...
+                [analyVar.DecayRateSlope(1), analyVar.DecayRate_yIntercept(1)],...
+                fitIndVar...
+                ),...
+            'Color',analyVar.COLORS(1,:)...
+            );
+        
+        xlabel('Peak Density (cm^-3)','FontSize',analyVar.axisfontsize);
+        ylabel('Decay Rate (s^-1)','FontSize',analyVar.axisfontsize);
+        
+%         legendVec2= cat(1,1:analyVar.numBasenamesAtom, 1:analyVar.numBasenamesAtom);
+%         SortedLegendVec=sort(legendVec2);
+%         hleg = legend(num2str(SortedLegendVec(:)),'Location','Best');
+%         htitle = get(hleg, 'Title');
+%         set(htitle,'String', 'Master Batch Index:')
+        
+hold off
+end
+

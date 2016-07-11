@@ -1,0 +1,7 @@
+*.xls
+*.xlsx
+./out/*
+./fig/*
+./Analysis_*
+*.csv
+*.txt

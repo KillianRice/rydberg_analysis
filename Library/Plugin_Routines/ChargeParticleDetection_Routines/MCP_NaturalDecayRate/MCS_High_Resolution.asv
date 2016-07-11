@@ -1,0 +1,253 @@
+function [indivDataset] = MCS_High_Resolution(analyVar,indivDataset,avgDataset)
+NumFrequency = 1; %at how many values of frequency was data taken
+NumDelayTimes = analyVar.numBasenamesAtom;
+NumBatches =  indivDataset{1}.CounterAtom;
+numDensityGroups = indivDataset{1}.numDensityGroups{1};
+mcsNumBins = indivDataset{1}.mcsNumBins{1};
+%% Convert TOF arrival time
+bin_time_convert     = analyVar.arrivalTimeBinWidth;%us, 0.5us per time bin
+analyVar.ArrivalTime = bin_time_convert*(analyVar.roiStart:analyVar.roiEnd)-0.5*repmat(bin_time_convert,1,length(analyVar.roiStart:analyVar.roiEnd));
+analyVar.ArrivalTime = analyVar.ArrivalTime(1,:)';
+analyVar.PushPullPotentialDiff = ...
+    analyVar.V_div_Push*analyVar.Push_Voltage*(1-exp(-analyVar.ArrivalTime/analyVar.PushVoltageRC))...
+    -analyVar.V_div_Pull*analyVar.Pull_Voltage*(1-exp(-analyVar.ArrivalTime/analyVar.PullVoltageRC));%volts
+analyVar.ElectricField = analyVar.Potential2Field*analyVar.PushPullPotentialDiff;%V cm^-1, electric field at atoms. size; 1 x (# of bins)
+
+%% Convert TOF arrival time II: use for some of the plots to corrext plotting off by 1 error
+analyVar.ArrivalTime2 = bin_time_convert*(analyVar.roiStart:analyVar.roiEnd);
+analyVar.PushPullPotentialDiff2 = ...
+    analyVar.V_div_Push*analyVar.Push_Voltage*(1-exp(-analyVar.ArrivalTime2/analyVar.PushVoltageRC))...
+    -analyVar.V_div_Pull*analyVar.Pull_Voltage*(1-exp(-analyVar.ArrivalTime2/analyVar.PullVoltageRC));%volts
+analyVar.ElectricField2 = 0.3*analyVar.PushPullPotentialDiff2;%V cm^-1, electric field at atoms
+
+%% Load Data
+indivDataset = param_extract_mcs_sum(analyVar, indivDataset);%get data out of mcs files, normalization to atomnumber and/or number of ramps is done here
+
+%% Bin of parent state
+PeakBin             = analyVar.PeakSignalBin- analyVar.roiStart+1;
+PeakBin             = PeakBin(1);
+analyVar.PeakBin    = PeakBin; % scalar value
+
+%% Density Calculation
+[analyVar, indivDataset] = EstimateDensity(analyVar, indivDataset);
+
+%% Format Data
+    %% Average Data 
+    [AvgSpectra, AvgSpectra_error] = deal(cell(1,indivDataset{1}.CounterAtom));
+    for bIndex = 1:indivDataset{1}.CounterAtom
+        for mbIndex = 1:analyVar.numBasenamesAtom
+            AvgSpectra{bIndex} = cat(4,AvgSpectra{bIndex}, indivDataset{mbIndex}.delay_spectra{bIndex});
+        end
+        AvgSpectra_error{bIndex}                = nanstd(AvgSpectra{bIndex},0,4);
+        AvgSpectra{bIndex}                      = nanmean(AvgSpectra{bIndex},4);
+        
+    end
+    
+    [AvgSpectra, AvgSpectra_error] = deal(cell(1,NumFrequency));
+    for freqIndex = 1:NumFrequency
+%         AvgSpectra{freqIndex} = nan(mcsNumBins, NumDelayTimes, numDensityGroups);
+        for DelayIndex = 1:analyVar.numBasenamesAtom
+            for bIndex = 1:NumBatches
+            AvgSpectra{freqIndex}(:,DelayIndex,:) = indivDataset{DelayIndex}.delay_spectra{NumBatches};
+            end
+        end
+    end
+%     
+    
+        indivDataset{bIndex}.AvgSpectra_error   = AvgSpectra_error{bIndex};
+        indivDataset{bIndex}.AvgSpectra         = AvgSpectra{bIndex}; %cell of size = num of batches. Each cell element is an array of (# of MCS bins) x (# of field delay times) x (# of densities) where each element is the number of counts
+
+    %% Peak Data
+    [Peak_AvgSpectra, Peak_AvgSpectra_error] = deal(cell(1,indivDataset{1}.CounterAtom));
+    for bIndex = 1:indivDataset{1}.CounterAtom
+        Peak_AvgSpectra_error{bIndex} = AvgSpectra_error{bIndex}(PeakBin,:,:);
+        Peak_AvgSpectra_error{bIndex} = permute(Peak_AvgSpectra_error{bIndex},[2 3 1]);
+        indivDataset{bIndex}.Peak_AvgSpectra_error = Peak_AvgSpectra_error{bIndex};
+
+        Peak_AvgSpectra{bIndex} = indivDataset{bIndex}.AvgSpectra(PeakBin,:,:);
+        Peak_AvgSpectra{bIndex} = permute(Peak_AvgSpectra{bIndex},[2 3 1]);
+        indivDataset{bIndex}.Peak_AvgSpectra = Peak_AvgSpectra{bIndex};% cell of size = num of batches. Each cell element is an array of (# of field delay times) x (# of densities) where each element is the number of counts in the peak bin
+    end
+
+    %% Non-Peak Data
+
+    [Sum_NonPeak_AvgSpectra, Sum_NonPeak_AvgSpectra_error, NonPeak_AvgSpectra_error, NonPeak_AvgSpectra] = deal(cell(1,indivDataset{1}.CounterAtom));
+    for bIndex = 1:indivDataset{1}.CounterAtom
+        NonPeak_AvgSpectra_error{bIndex} = AvgSpectra_error{bIndex};
+        NonPeak_AvgSpectra_error{bIndex}(PeakBin,:,:) = 0; 
+
+        Sum_NonPeak_AvgSpectra_error{bIndex} = sum(NonPeak_AvgSpectra_error{bIndex}.^2,1).^0.5;
+        Sum_NonPeak_AvgSpectra_error{bIndex} = permute(Sum_NonPeak_AvgSpectra_error{bIndex}, [2 3 1]);
+
+        NonPeak_AvgSpectra{bIndex} = AvgSpectra{bIndex};
+        NonPeak_AvgSpectra{bIndex}(PeakBin,:,:) = nan;
+        % elements (PeakBin,:,:) are set to nan; PeakBin data is now nan
+
+        Sum_NonPeak_AvgSpectra{bIndex} = nansum(NonPeak_AvgSpectra{bIndex},1);
+        Sum_NonPeak_AvgSpectra{bIndex} = permute(Sum_NonPeak_AvgSpectra{bIndex},[2 3 1]);
+    end
+
+%% Normalize Data
+
+    [NormTotalPopAvgSpectra, NormTotalPopNonPeak_AvgSpectra, TotalRydPop, TotalRydPop_error, TotalRydNonPeakPop, TotalRydNonPeakPop_error, TotalLoss, NormRydPopAvgSpectra, NormRydPopNonPeak_AvgSpectra,NormTotalPopAvgSpectra_error] = deal(cell(1,indivDataset{1}.CounterAtom));
+    [tZeroNormalization_Array , tZeroNormalization_Array_error, NormTotalPopNonPeak_AvgSpectra_error, tAllNormalization_Array, tAllNormalization_Array_error] = deal(cell(1,indivDataset{1}.CounterAtom));
+    [NormRydPopAvgSpectra_error, NormRydPopNonPeak_AvgSpectra_error] = deal(cell(1,indivDataset{1}.CounterAtom));
+
+    for bIndex = 1:indivDataset{1}.CounterAtom
+
+        %% Normalization Parameters
+        NormalizationDimension = 1; % set to 1 to normalize over the bin/field dimension
+        DelayDim = 2; %dimension of delay field
+        NormalizationDelayBin = 1; %normalize at constant delay field
+
+        %% Calculate Normalization Array At Field Delay of 0s
+            [~, ~, tZeroNormalization_Array{bIndex} , tZeroNormalization_Array_error{bIndex}] =...
+                NormalizeArray( AvgSpectra{bIndex}(:,NormalizationDelayBin,:), AvgSpectra_error{bIndex}(:,NormalizationDelayBin,:), NormalizationDimension );
+
+            %% Apply Normalization Array
+                %% All Bins
+                    [NormTotalPopAvgSpectra{bIndex}, NormTotalPopAvgSpectra_error{bIndex}]=...
+                        ApplyNormalization(AvgSpectra{bIndex}, AvgSpectra_error{bIndex}, tZeroNormalization_Array{bIndex}, tZeroNormalization_Array_error{bIndex},1, DelayDim);
+
+                %% Exclude Peak Bin
+                    [NormTotalPopNonPeak_AvgSpectra{bIndex}, NormTotalPopNonPeak_AvgSpectra_error{bIndex}]=...
+                        ApplyNormalization(NonPeak_AvgSpectra{bIndex}, NonPeak_AvgSpectra_error{bIndex}, tZeroNormalization_Array{bIndex}, tZeroNormalization_Array_error{bIndex},1, DelayDim);
+
+                %% Sum of All Bins
+                    TotalRydPop{bIndex}         = nansum(NormTotalPopAvgSpectra{bIndex},NormalizationDimension);
+                    TotalRydPop{bIndex}         = permute(TotalRydPop{bIndex}, [2 3 1]);
+                    TotalRydPop_error{bIndex}   = nansum(NormTotalPopAvgSpectra_error{bIndex}.^2,NormalizationDimension).^0.5;
+                    TotalRydPop_error{bIndex}   = permute(TotalRydPop_error{bIndex}, [2 3 1]);
+
+                %% Sum of All Non-Peak Bins
+                    TotalRydNonPeakPop{bIndex}          = nansum(NormTotalPopNonPeak_AvgSpectra{bIndex},1);
+                    TotalRydNonPeakPop{bIndex}          = permute(TotalRydNonPeakPop{bIndex}, [2 3 1]);
+                    TotalRydNonPeakPop_error{bIndex}    = nansum(NormTotalPopNonPeak_AvgSpectra_error{bIndex}.^2,NormalizationDimension).^0.5;
+                    TotalRydNonPeakPop_error{bIndex}    = permute(TotalRydNonPeakPop_error{bIndex}, [2 3 1]);
+
+                %% Total Loss
+                    TotalLoss{bIndex}       = 1-TotalRydPop{bIndex};
+
+                %% save to structure
+                    indivDataset{bIndex}.NormTotalPopAvgSpectra         = NormTotalPopAvgSpectra{bIndex}; %Population normalized by the total population at t = 0
+                    indivDataset{bIndex}.NormTotalPopAvgSpectra_error   = NormTotalPopAvgSpectra_error{bIndex}; 
+
+                    indivDataset{bIndex}.NormTotalPopNonPeak_AvgSpectra = NormTotalPopNonPeak_AvgSpectra{bIndex};%Population normalized by the total population at t = 0, set peak bin data to nan
+
+                    indivDataset{bIndex}.TotalRydPop                    = TotalRydPop{bIndex};%Population summed over rydberg states
+                    indivDataset{bIndex}.TotalRydPop_error              = TotalRydPop_error{bIndex};
+
+                    indivDataset{bIndex}.TotalRydNonPeakPop             = TotalRydNonPeakPop{bIndex};   %Population summed over rydberg states except peak bin 
+                    indivDataset{bIndex}.TotalRydNonPeakPop_error       = TotalRydNonPeakPop_error{bIndex};    
+
+                    indivDataset{bIndex}.TotalLoss                     = TotalLoss{bIndex};            
+
+        %% Calculate Normalization Array At Every Field Delay
+            [~, ~, tAllNormalization_Array{bIndex} , tAllNormalization_Array_error{bIndex}] =...
+                NormalizeArray( AvgSpectra{bIndex}, AvgSpectra_error{bIndex}, NormalizationDimension );            
+
+            %% Apply Normalization Array
+                %% All Bins
+                    [NormRydPopAvgSpectra{bIndex}, NormRydPopAvgSpectra_error{bIndex}]=...
+                        ApplyNormalization(AvgSpectra{bIndex}, AvgSpectra_error{bIndex}, tAllNormalization_Array{bIndex}, tAllNormalization_Array_error{bIndex},2, DelayDim);        
+
+                %% Exclude Peak Bin
+                    [NormRydPopNonPeak_AvgSpectra{bIndex}, NormRydPopNonPeak_AvgSpectra_error{bIndex}]=...
+                        ApplyNormalization(NonPeak_AvgSpectra{bIndex}, NonPeak_AvgSpectra_error{bIndex}, tAllNormalization_Array{bIndex}, tAllNormalization_Array_error{bIndex},2, DelayDim);
+
+                %% Save to Structure
+                    indivDataset{bIndex}.NormRydPopAvgSpectra              = NormRydPopAvgSpectra{bIndex}; %Population normalized by the total population at each field delay
+                    indivDataset{bIndex}.NormRydPopAvgSpectra_error         = NormRydPopAvgSpectra_error{bIndex};
+
+                    indivDataset{bIndex}.NormRydPopNonPeak_AvgSpectra       = NormRydPopNonPeak_AvgSpectra{bIndex}; %Non Peak Population normalized by the total population at each field delay
+                    indivDataset{bIndex}.NormRydPopNonPeak_AvgSpectra_error = NormRydPopNonPeak_AvgSpectra_error{bIndex};
+
+    end    
+
+%% Plot Raw Data (No Fitting)    
+    
+    %% plot TOF MCS signal
+        if analyVar.plotMCSTraces_Flag
+            plotMCSTraces( analyVar,indivDataset )
+        end
+
+        if analyVar.plotMCSTraces_counts_vs_delaytime_Flag
+            plotMCSTraces_counts_vs_delaytime( analyVar,indivDataset )
+        end
+
+    %% generic plots
+        if analyVar.permuationPlots
+            plot_AvgCounts_vs_xVariable(analyVar, indivDataset, 1, 2) % ** first number sets the xaxis, second sets the legend, 1 for E field, 2 for Field Delay, 3 for Density, 4 for frequency
+        %     plot_AvgCounts_vs_xVariable(analyVar, indivDataset, 1, 3)
+        %     plot_AvgCounts_vs_xVariable(analyVar, indivDataset, 1, 4)
+        %     
+        %     plot_AvgCounts_vs_xVariable(analyVar, indivDataset, 2, 1) % **
+        %     plot_AvgCounts_vs_xVariable(analyVar, indivDataset, 2, 3)
+        %     plot_AvgCounts_vs_xVariable(analyVar, indivDataset, 2, 4)
+        %     
+        %     plot_AvgCounts_vs_xVariable(analyVar, indivDataset, 3, 1)
+        %     plot_AvgCounts_vs_xVariable(analyVar, indivDataset, 3, 2)
+        %     plot_AvgCounts_vs_xVariable(analyVar, indivDataset, 3, 4)
+        %     
+        %     plot_AvgCounts_vs_xVariable(analyVar, indivDataset, 4, 1)
+        %     plot_AvgCounts_vs_xVariable(analyVar, indivDataset, 4, 2)
+        %     plot_AvgCounts_vs_xVariable(analyVar, indivDataset, 4, 3)
+        end
+        
+    %% plot Avg TOF MCS signal
+        if analyVar.plotAvgMCSTraces_Flag
+            plotAvgMCSTraces2( analyVar,indivDataset )
+        end
+
+        if analyVar.plotNonPeak_AvgMCSTraces_Flag
+            plotNonPeak_AvgMCSTraces( analyVar,indivDataset )
+        end
+
+        if analyVar.plotAvgMCSTraces_counts_vs_delaytime_Flag
+            plotAvgMCSTraces_counts_vs_delaytime( analyVar,indivDataset )
+        end
+
+        if analyVar.plotAvgMCSTraces_counts_vs_delaytime_SumNonPeak_Flag
+            plotAvgMCSTraces_counts_vs_delaytime_SumNonPeak( analyVar,indivDataset )
+        end
+
+%% fit frequency spectrum
+if analyVar.fitMCS_SpectraGaussian
+    indivDataset = MCS_gaussian_fit2(analyVar, indivDataset);
+end
+
+%% Parent State Evolution  
+if analyVar.StateEvolution_Fit==1
+    [indivDataset] = ParentStateEvolution_Fit(analyVar, indivDataset);
+end
+
+%% Secondary State Evolution
+if analyVar.StateEvolution_Fit==1
+    [indivDataset] = SecondaryStateEvolution_Fit(analyVar, indivDataset);
+end
+
+%% Plot State Evolution
+if analyVar.StateEvolution_Fit && analyVar.plot_StateEvolution
+    plot_StateEvolution( analyVar, indivDataset )
+
+elseif analyVar.plot_StateEvolution
+    error('analyVar.StateEvolution_Fit is not set to 1: to makes these plots, need to enable fitting.')
+end
+
+%% Decay Rate vs. Density
+if analyVar.MCS_DecayRate_Fit
+%     [analyVar, indivDataset] = MCS_DecayRate_Fit_AvgFits(analyVar, indivDataset);
+    
+    [analyVar, indivDataset] = MCS_DecayRate_Fit_AvgData(analyVar, indivDataset);
+end
+
+if analyVar.plot_MCS_DecayRate_Fit
+    plot_MCS_DecayRate_Fit(analyVar, indivDataset)
+end
+
+%%
+if analyVar.DecayRateHist
+    DecayRate_Histogram(analyVar, indivDataset)
+end    
+end
+
