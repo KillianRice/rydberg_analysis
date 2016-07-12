@@ -13,7 +13,25 @@ function indivDataset = get_indiv_batch_data(analyVar)
 %% Loop through each batch file listed in analyVar.basenamevectorAtom
 indivDataset = cell(analyVar.numBasenamesAtom,1);
 
+
+%% Print Information about what is being analyzed and how
+disp(['Analyzing ' num2str(analyVar.numBasenamesAtom) ' scans'])
+if analyVar.UseImages
+    disp('Analysing Images')
+    if strcmp(analyVar.sampleType, 'BEC')
+        if analyVar.pureSample
+            disp(['Sample type is pure ' analyVar.sampleType])
+        else
+            disp(['Sample type is mixed ' analyVar.sampleType])
+        end
+    else
+        disp(['Sample type is ' analyVar.sampleType])
+    end
+end
+    
+
 for basenameNum = 1:analyVar.numBasenamesAtom
+    
     % Find basename for background
     f = regexp(analyVar.basenamevectorBack,[char(analyVar.basenamevectorAtom(basenameNum)) '.*'],'match'); 
     f = [f{:}];
@@ -24,6 +42,10 @@ for basenameNum = 1:analyVar.numBasenamesAtom
     batchfilePico   = [analyVar.dataDir char(analyVar.basenamevectorAtom(basenameNum)) '_pico.batch'];  % current pico batch file
     batchfileSR400  = [analyVar.dataDir char(analyVar.basenamevectorAtom(basenameNum)) '_sr400_counts.dat'];
     batchfileMCS    = [analyVar.dataDir char(analyVar.basenamevectorAtom{basenameNum}) '_MCS.batch'];
+    
+    
+    % print batch name
+    char(analyVar.basenamevectorAtom(basenameNum))
     
     batchLineFormat = '%q%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f';
     %batch line format reads as follows:
