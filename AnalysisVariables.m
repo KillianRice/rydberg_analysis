@@ -670,7 +670,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_Rydberg_Molecules_n49';
+analyPrefix     = '_test';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
