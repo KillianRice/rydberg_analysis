@@ -66,7 +66,7 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'MCP_Signal_vs_Density'...          %19
                     'BEC_Horizontal_Trap_Frequency',... %20
                     };
-plugInVec = [18];
+plugInVec = [];
 
 UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 % Common Plotting flags
@@ -81,7 +81,7 @@ end
 sampleType     = 'BEC';  % Options are Thermal, BEC, or Lattice
 isotope        = 84; % Isotope mass used to select applicable models for fitting. Options are 84, 86, or 88 (87 not currently supported)
 detuning       = 0;  % s^-1, image beam detuning (as of 7/1/15)
-pureSample     = 1;  % Flags whether BEC samples have a thermal fraction present or not (ignored for Thermal and Lattice samples)
+pureSample     = 0;  % Flags whether BEC samples have a thermal fraction present or not (ignored for Thermal and Lattice samples)
 winToFit       = {'Central'}; % Specify which windows to fit, this generates the vector LatticeAxesFit
 binHorizontal  = 1;%binning done by camera when taking images
 binVertical    = 1;
@@ -122,7 +122,7 @@ lsqLinBnd       = {-Inf Inf}; % Linear background terms bound, all allowed to ra
 % Flag to Load Image Data
 
 SavePlotData  = 0; % Boolean to allow aggregation of variables from plotting into output structure
-plotFitEval   = 0; % Boolean to display plots showing the fit, cloud evolution, and residuals
+plotFitEval   = 1; % Boolean to display plots showing the fit, cloud evolution, and residuals
 plotInstParam = 1; % Boolean to extract and display 1st order parameters such as temperature, size, and number
 plotMeanParam = 1; % Boolean to average instantaneous parameters across multiple scans
 plotFitLine   = 1; % Boolean to extract higher order parameters by fitting instantaneous parameters
@@ -671,7 +671,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_test';
+analyPrefix     = '_Rydberg_Molecules_n49';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,

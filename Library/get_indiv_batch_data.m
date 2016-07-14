@@ -45,7 +45,7 @@ for basenameNum = 1:analyVar.numBasenamesAtom
     
     
     % print batch name
-    char(analyVar.basenamevectorAtom(basenameNum))
+    disp(char(analyVar.basenamevectorAtom(basenameNum)));
     
     batchLineFormat = '%q%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f';
     %batch line format reads as follows:
