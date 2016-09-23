@@ -51,7 +51,10 @@ for basenameNum = 1:analyVar.numBasenamesAtom
             if k == 1; figure(100 + basenameNum); clf; end
             set(0,'CurrentFigure',100 + basenameNum)
             hCloud(k) = subplot(indivDataset{basenameNum}.SubPlotRows,indivDataset{basenameNum}.SubPlotCols,k);
-            pcolor(Ypix,Xpix,trshtRoiCutCloud); shading flat;
+            pcolor(Ypix,Xpix,trshtRoiCutCloud);
+			shading flat;
+			axis equal tight;
+			
             %%% Plot axis details
             title(strcat(num2str(indivDataset{basenameNum}.imagevcoAtom(k))));
             hold on; grid off; axis off
@@ -65,7 +68,10 @@ for basenameNum = 1:analyVar.numBasenamesAtom
             if k == 1; figure(200 + basenameNum); clf; end
             set(0,'CurrentFigure',200 + basenameNum)
             hCloud2(k) = subplot(indivDataset{basenameNum}.SubPlotRows,indivDataset{basenameNum}.SubPlotCols,k);
-            pcolor(Ypix,Xpix,trshtRoiCutBack); shading flat;
+            pcolor(Ypix,Xpix,trshtRoiCutBack);
+			shading flat;
+			axis equal tight;
+			
             %%% Plot axis details
             title(strcat(num2str(indivDataset{basenameNum}.imagevcoAtom(k))));
             hold on; grid off; axis off
@@ -79,7 +85,10 @@ for basenameNum = 1:analyVar.numBasenamesAtom
             if k == 1; figure(100 + basenameNum); clf; end
             set(0,'CurrentFigure',100 + basenameNum)
             hCloud(k) = subplot(indivDataset{basenameNum}.SubPlotRows,indivDataset{basenameNum}.SubPlotCols,k);
-            pcolor(Ypix,Xpix,roiCutImage); shading flat;
+            pcolor(Ypix,Xpix,roiCutImage);
+			shading flat;
+			axis equal tight;
+			
             %%% Plot axis details
             title(strcat(num2str(indivDataset{basenameNum}.imagevcoAtom(k))));
             hold on; grid off; axis off
