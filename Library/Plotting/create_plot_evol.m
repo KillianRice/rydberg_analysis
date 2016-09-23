@@ -27,7 +27,10 @@ for basenameNum = 1:analyVar.numBasenamesAtom
         for k = 1:indivDataset{basenameNum}.CounterAtom;
             %% Plot Evolution
             evolAxH{basenameNum}(k) = subplot(indivDataset{basenameNum}.SubPlotRows,indivDataset{basenameNum}.SubPlotCols,k);
-            pcolor(indivDataset{basenameNum}.All_OD_Image{k}); shading flat;
+            pcolor(indivDataset{basenameNum}.All_OD_Image{k});
+			shading flat;
+			axis equal tight;
+			
             %%% Plot axis details
             title(strcat(num2str(indivDataset{basenameNum}.imagevcoAtom(k)),[' ' analyVar.xDataUnit]));
 			 hold on; grid off; axis off
