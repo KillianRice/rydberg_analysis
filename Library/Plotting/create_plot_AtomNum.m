@@ -57,7 +57,7 @@ for basenameNum = 1:analyVar.numBasenamesAtom
         numTitle = {};
         default_plot(analyVar,[basenameNum analyVar.numBasenamesAtom],...
             figNum,numLabel,numTitle,analyVar.timevectorAtom,...
-            analyVar.funcDataScale(indVar)',sum(winBECNum,1)./sum(winTotNum,1)*100)
+            analyVar.funcDataScale(indVar)',sum(winBECNum,1)./sum(winTotNum,1)*100);
     end
 end
 end
