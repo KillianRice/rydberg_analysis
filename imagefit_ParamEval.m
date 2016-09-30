@@ -20,6 +20,7 @@ function vargout = imagefit_ParamEval(varargin)
 %   12.10.13 - Changed name from imagefit_GaussianBimodalAndHistogramV2012
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Load variables and file datacreate
+close all
 if nargin == 0 % If run without arguments
     analyVar     = AnalysisVariables;
 else
