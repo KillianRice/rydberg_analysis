@@ -17,9 +17,9 @@ initAmpSign = amplitudesign;
 
 initAmp = initAmpSign*(max(data_y)-min(data_y));%not guessing on the sign at the moment
 % initOffset = mean([min(data_y);max(data_y)])-initAmpSign*0.5*initAmp;%not guessing on the sign at the moment
-initOffset = 4e4;
-initCenter = sum(data_x.*(data_y-initOffset))/sum(data_y-initOffset);%expectation value of data_x, with PDF data_y
-initSigma = sqrt(sum((data_x-initCenter).^2 .*(data_y-initOffset)) / sum(data_y-initOffset));% stnd = <x^2>-<x>^2 with PDF y(x)
+initOffset = data_y(1);
+initCenter = sum(data_x.*(data_y))/sum(data_y);%expectation value of data_x, with PDF data_y
+initSigma = sqrt(sum((data_x-initCenter).^2 .*(data_y)) / sum(data_y));% stnd = <x^2>-<x>^2 with PDF y(x)
 
 if offsetflag
     Fitting_Output = NonLinearModel.fit(data_x, data_y, GaussianFitModel,...
