@@ -1,4 +1,4 @@
-function [ output_args ] = gaussian_lineshape( analyVar,indivDataset,avgDataset )
+function [output_args] = gaussian_lineshape(analyVar,indivDataset,avgDataset)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
