@@ -56,12 +56,23 @@ guassian_FWHM_error = 2*sigma_gaussian(2)*(2*log(2))^0.5;
 center_gaussian
 guassian_FWHM
 guassian_FWHM_error
+
 xDataGaussian = linspace(min(xData), max(xData), 1e3);
-figure
-hold on
-errorbar(unique_Freq,yData_Average,yData_error)
-plot(xDataGaussian, offset_gaussian(1)+amplitude_gaussian(1)*gaussmf(xDataGaussian, [sigma_gaussian(1), center_gaussian(1)] ), 'blue','LineWidth',2);
-hold off
+
+figure;
+hold on;
+errorbar(unique_Freq,yData_Average,yData_error,'ored');
+plot(xDataGaussian,offset_gaussian(1)+amplitude_gaussian(1)*gaussmf(xDataGaussian, [sigma_gaussian(1), center_gaussian(1)] ), 'blue','LineWidth',2);
+dim = [.2 .5 .3 .3];
+str_cntr = strcat('Gaussian center: ',num2str(center_gaussian(1)));
+str_sigma = strcat('Gaussian FWHM: ',num2str(guassian_FWHM));
+str = [str_cntr, char(10),str_sigma];
+annotation('textbox',dim,'String',str,'FitBoxToText','on','BackgroundColor','white');
+grid on;
+xlabel(analyVar.xDataLabel);
+ylabel('Atom Number');
+hold off;
+
 output_args = nan;
 
 end
