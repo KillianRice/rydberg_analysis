@@ -66,7 +66,7 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'MCP_Signal_vs_Density'...          %19
                     'BEC_Horizontal_Trap_Frequency',... %20
                     };
-plugInVec = [];
+plugInVec = [15];
 
 UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 % Common Plotting flags
@@ -388,7 +388,7 @@ end
 
 
 % Plotting presentation
-TimeOrDetune  = 'Frequency'; % Valid options are 'Time', 'Detuning', 'Repetition', 'Voltage', 'Frequency'
+TimeOrDetune  = 'SpecSynth'; % Valid options are 'Time', 'Detuning', 'Repetition', 'Voltage', 'Frequency'
 
 titleFontSize = 18;
 axisfontsize  = 14;
@@ -813,6 +813,14 @@ switch TimeOrDetune
 	case 'Frequency'
         funcDataScale = @(data) data;
         xDataLabel    = 'Frequency [MHz]';
+        xDataUnit     = 'MHz';
+    case 'UVSynth'
+        funcDataScale = @(data) data;
+        xDataLabel    = 'UV Synth (8x for actual freq.) [MHz]';
+        xDataUnit     = 'MHz';
+	case 'SpecSynth'
+        funcDataScale = @(data) data;
+        xDataLabel    = 'Spec. Synth (2x for actual freq.) [MHz]';
         xDataUnit     = 'MHz';
     otherwise
         error('Invalid selection for variable: TimeOrDetune. Please check the assignment.')
