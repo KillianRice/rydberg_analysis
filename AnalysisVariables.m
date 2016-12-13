@@ -69,6 +69,7 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
 plugInVec = [15];
 
 UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
+UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
 % Common Plotting flags
 
     lcl_logicFitLine = zeros(1,length(lcl_validFitLine));
@@ -78,6 +79,7 @@ end
 
 % EXPERIMENTAL OPTIONS AND SETTINGS
 %%-----------------------------------------------------------------------%%
+%%%% Atom cloud properties
 sampleType     = 'Thermal';  % Options are Thermal, BEC, or Lattice
 isotope        = 84; % Isotope mass used to select applicable models for fitting. Options are 84, 86, or 88 (87 not currently supported)
 detuning       = 0;  % s^-1, image beam detuning (as of 7/1/15)
@@ -89,6 +91,28 @@ matrixSize     = [1002/binVertical 1004/binHorizontal]; % Matrix size of camera 
 CameraMag      = 1;  % Currently can do 1x or 4x magnification (input 1 or 4)
 CCDbinning     = 1;  % Number of pixels binned when first recording data
 TempXY         = 0; % set to 1 if Temp will be the geometric mean of TempX and TempY, otherwise Temp will equal TempX
+
+%%%% Rydberg properties
+quantumNumberN = 72; %principal quantum number n
+state = '3S1'; %term symbol for rydberg state (2S+1)L(J)
+quantumDefect = 0;
+switch state
+    case '3S1'
+        quantumDefect = 3.371;
+    case '1S0'
+        quantumDefect = 3.26896;
+    case '1D2'
+        quantumDefect = 2.3807;
+    case '3D1'
+        quantumDefect = 2.658;
+    case '3D2'
+        quantumDefect = 2.636;
+    case '3D3'
+        quantumDefect = 2.63;
+
+nStar = quantumNumberN - quantumDefect;
+        
+        
 %% BACKGROUND SUBTRACTION ROUTINE
 %%-----------------------------------------------------------------------%%
 varianceLim  = .995; % Amount of variance to choose principal component vectors for background subtraction
@@ -134,257 +158,260 @@ SumCounts = 0;
 %% Photon Counter
 plotCounts_SR400 = 0;%photon counter
 
-%% MCS Flags
-    %% options for MCS_UVFrequency_Spectrum and MCS_UV_Spectrum_Indiv_SFI
-    %% Which principal quantum number n
-    PrincQN = 49;
-    
-    %% which frequency groups
-    featuregroup = 0; % 0 to use no bads. used in ChooseFreqBand via MCS_UVFrequency_Spectrum/ MCS_UV_Spectrum_Indiv_SFI
-    
-    %% Atomic line center
-    FreqConversion = 8; %One unit of frequency in synth frequency is 8 units in UV light frequency
-    
-    switch PrincQN
-        case 38
-            %% Electric Field Parameters
-            FieldCalibration= 224/224;%224/227, ratio of calculated ionization field of 38s and measured field of 38s, 2015.09.25
-            Potential2Field = 0.3;% cm^-1, conversion between potential at atoms to field at atoms. Chamber is ground.
-            MaxFieldRampVoltage = 1745; % 1745V saturation potential difference across ionization plates
-            MaxFieldRampVoltage_error = 1; 
-            FieldRampTimeConstant = 8.77e-6; % 8.77us time constant
-            FieldRampTimeConstant_error = 0.01e-6;
-            FieldRampTimeOffset = 0.26e-6; % 0.26us time offset
-            FieldRampTimeOffset_error = 0.01e-6;             
-            switch sampleType
-                case {'Thermal'}
-                    %% Title
-                    titleString = {'n = 38 Thermal'};
-                    %% Atomic Line Center
-                    atomic_LineCenter = 0; % 60 Thermal 2016-06-19
-                    %% Trap Frequencies
-                    trapfreqZ = 2*pi*298;
-                    trapfreqZ_error = 2*pi*15;
-                    trapfreqX = 2*pi*253;
-                    trapfreqX_error = 2*pi*15;
-                    trapfreqY = trapfreqX;
-                    trapfreqY_error = trapfreqX_error;                    
-                case {'BEC'}
-                    %% Title
-                    titleString = {'n = 38 BEC'};
-                    %% Atomic Line Center
-                    atomic_LineCenter = 0; % 38S BEC 2016-02-17
-                    %% Trap Frequencies
-                    trapfreqZ = 2*pi*115;
-                    trapfreqZ_error = 2*pi*1;
-                    trapfreqX = 2*pi*98;
-                    trapfreqX_error = 2*pi*1;
-                    trapfreqY = trapfreqX;
-                    trapfreqY_error = trapfreqX_error;                    
-            end        
-        case 49
-            %% Electric Field Parameters
-            FieldCalibration= 224/224;%224/227, ratio of calculated ionization field of 38s and measured field of 38s, 2015.09.25
-            Potential2Field = 0.3;% cm^-1, conversion between potential at atoms to field at atoms. Chamber is ground.
-            MaxFieldRampVoltage = 445.97; % 1745V saturation potential difference across ionization plates
-            MaxFieldRampVoltage_error = 0.06; 
-            FieldRampTimeConstant = 8.81e-6; % 8.77us time constant
-            FieldRampTimeConstant_error = 0.01e-6;
-            FieldRampTimeOffset = 1.02e-6; % 0.26us time offset
-            FieldRampTimeOffset_error = 0.01e-6;            
-            switch sampleType
-                case {'Thermal'}
-                    %% Title
-                    titleString = {'5s49s {}^3S_1 Thermal'};
-                    %% Atomic Line Center
-                    atomic_LineCenter = 119.48; % 49S Thermal 2016-07-02
-                    %% Trap Frequencies
-                    trapfreqZ = 2*pi*323; % vertical
-                    trapfreqZ_error = 2*pi*1;
-                    trapfreqX = 0.85*trapfreqZ;
-                    trapfreqX_error = 2*pi*5;
-                    trapfreqY = trapfreqX;
-                    trapfreqY_error = trapfreqX_error;                    
-                case {'BEC'}
-                    %% Title
-                    titleString = {'5s49s {}^3S_1 BEC'};
-                    %% Atomic Line Center
-                    atomic_LineCenter = 119.44; % 49S BEC 2016-02-2
-                    %% Trap Frequencies
-                    trapfreqZ = 2*pi*125;
-                    trapfreqZ_error = 2*pi*1;
-                    trapfreqX = 2*pi*104;
-                    trapfreqX_error = 2*pi*5;
-                    trapfreqY = trapfreqX;
-                    trapfreqY_error = trapfreqX_error;  
-            end
-        case 60
-            %% Electric Field Parameters
-            FieldCalibration= 224/224;%224/227, ratio of calculated ionization field of 38s and measured field of 38s, 2015.09.25
-            Potential2Field = 0.3;% cm^-1, conversion between potential at atoms to field at atoms. Chamber is ground.
-            MaxFieldRampVoltage = 185.37; % 1745V saturation potential difference across ionization plates
-            MaxFieldRampVoltage_error = 0.06; 
-            FieldRampTimeConstant = 9.25e-6; % 8.77us time constant
-            FieldRampTimeConstant_error = 0.01e-6;
-            FieldRampTimeOffset = 1.94e-6; % 0.26us time offset
-            FieldRampTimeOffset_error = 0.01e-6;    
-            %% Atomic Line Center
-            switch sampleType               
-                case {'Thermal'}
-                    %% Title
-%                     titleString = {'n = 60 Thermal'};
-                    titleString = {'5s60s {}^3S_1 Thermal'};
-                    %% Atomic Line Center
-                    atomic_LineCenter = 110.9; % 60S Thermal 2016-06-19
-                    %% Trap Frequencies
-                    trapfreqZ = 2*pi*247; % vertical
-                    trapfreqZ_error = 2*pi*1;
-                    trapfreqX = 0.85*trapfreqZ;
-                    trapfreqX_error = 2*pi*5;
-                    trapfreqY = trapfreqX;
-                    trapfreqY_error = trapfreqX_error;
-
-                case {'BEC'}
-                    %% Title
-                    titleString = {'5s60s {}^3S_1 BEC'};
-                    %% Atomic Line Center
-                    atomic_LineCenter = 111.0;
-                    %% Trap Frequencies
-                    trapfreqZ = 2*pi*133; % vertical %200mV
-                    trapfreqZ_error = 2*pi*1;
-                    trapfreqX = 2*pi*115;
-                    trapfreqX_error = 2*pi*5;
-                    trapfreqY = trapfreqX;
-                    trapfreqY_error = trapfreqX_error; 
-            end
-        case 72
-            %% Electric Field Parameters
-            FieldCalibration= 224/224;%224/227, ratio of calculated ionization field of 38s and measured field of 38s, 2015.09.25
-            Potential2Field = 0.3;% cm^-1, conversion between potential at atoms to field at atoms. Chamber is ground.
-            MaxFieldRampVoltage = 100; % saturation potential difference across ionization plates
-            MaxFieldRampVoltage_error = 0.06; 
-            FieldRampTimeConstant = 1.5e-6; % 
-            FieldRampTimeConstant_error = 0.01e-6;
-            FieldRampTimeOffset = 0.2; % 0.26us time offset
-            FieldRampTimeOffset_error = 0.01e-6;    
-            %% Atomic Line Center
-            switch sampleType               
-                case {'Thermal'}
-                    %% Title
-                    titleString = {'5s72s {}^3S_1 Thermal'};
-                    %% Atomic Line Center
-                    atomic_LineCenter = 120.8; % 72S Thermal 2016.05.18
-                    %% Trap Frequencies
-                    trapfreqZ = 2*pi*243; % vertical %% 
-                    trapfreqZ_error = 2*pi*1;
-                    trapfreqX = 0.85*trapfreqZ;
-                    trapfreqX_error = 2*pi*5;
-                    trapfreqY = trapfreqX;
-                    trapfreqY_error = trapfreqX_error;                   
-
-                case {'BEC'}
-                    %% Title
-                    titleString = {'5s72s {}^3S_1 BEC'};
-                    %% Atomic Line Center
-                    atomic_LineCenter = 120.8;
-                    %% Trap Frequencies
-                    trapfreqZ = 2*pi*115; % vertical %200mV
-                    trapfreqZ_error = 2*pi*1;
-                    trapfreqX = 2*pi*96;
-                    trapfreqX_error = 2*pi*5;
-                    trapfreqY = 2*pi*96;
-                    trapfreqY_error = trapfreqX_error; 
-            end               
-    end
-    
+% %% legacy code
+% %{legacy code
+% %% MCS Flags
+%     %% options for MCS_UVFrequency_Spectrum and MCS_UV_Spectrum_Indiv_SFI
+%     %% Which principal quantum number n
+%     PrincQN = 49;
+%     
+%     %% which frequency groups
+%     featuregroup = 0; % 0 to use no bads. used in ChooseFreqBand via MCS_UVFrequency_Spectrum/ MCS_UV_Spectrum_Indiv_SFI
+%     
+%     %% Atomic line center
+%     FreqConversion = 8; %One unit of frequency in synth frequency is 8 units in UV light frequency
+%     
+%     switch PrincQN
+%         case 38
+%             %% Electric Field Parameters
+%             FieldCalibration= 224/224;%224/227, ratio of calculated ionization field of 38s and measured field of 38s, 2015.09.25
+%             Potential2Field = 0.3;% cm^-1, conversion between potential at atoms to field at atoms. Chamber is ground.
+%             MaxFieldRampVoltage = 1745; % 1745V saturation potential difference across ionization plates
+%             MaxFieldRampVoltage_error = 1; 
+%             FieldRampTimeConstant = 8.77e-6; % 8.77us time constant
+%             FieldRampTimeConstant_error = 0.01e-6;
+%             FieldRampTimeOffset = 0.26e-6; % 0.26us time offset
+%             FieldRampTimeOffset_error = 0.01e-6;             
+%             switch sampleType
+%                 case {'Thermal'}
+%                     %% Title
+%                     titleString = {'n = 38 Thermal'};
+%                     %% Atomic Line Center
+%                     atomic_LineCenter = 0; % 60 Thermal 2016-06-19
+%                     %% Trap Frequencies
+%                     trapfreqZ = 2*pi*298;
+%                     trapfreqZ_error = 2*pi*15;
+%                     trapfreqX = 2*pi*253;
+%                     trapfreqX_error = 2*pi*15;
+%                     trapfreqY = trapfreqX;
+%                     trapfreqY_error = trapfreqX_error;                    
+%                 case {'BEC'}
+%                     %% Title
+%                     titleString = {'n = 38 BEC'};
+%                     %% Atomic Line Center
+%                     atomic_LineCenter = 0; % 38S BEC 2016-02-17
+%                     %% Trap Frequencies
+%                     trapfreqZ = 2*pi*115;
+%                     trapfreqZ_error = 2*pi*1;
+%                     trapfreqX = 2*pi*98;
+%                     trapfreqX_error = 2*pi*1;
+%                     trapfreqY = trapfreqX;
+%                     trapfreqY_error = trapfreqX_error;                    
+%             end        
+%         case 49
+%             %% Electric Field Parameters
+%             FieldCalibration= 224/224;%224/227, ratio of calculated ionization field of 38s and measured field of 38s, 2015.09.25
+%             Potential2Field = 0.3;% cm^-1, conversion between potential at atoms to field at atoms. Chamber is ground.
+%             MaxFieldRampVoltage = 445.97; % 1745V saturation potential difference across ionization plates
+%             MaxFieldRampVoltage_error = 0.06; 
+%             FieldRampTimeConstant = 8.81e-6; % 8.77us time constant
+%             FieldRampTimeConstant_error = 0.01e-6;
+%             FieldRampTimeOffset = 1.02e-6; % 0.26us time offset
+%             FieldRampTimeOffset_error = 0.01e-6;            
+%             switch sampleType
+%                 case {'Thermal'}
+%                     %% Title
+%                     titleString = {'5s49s {}^3S_1 Thermal'};
+%                     %% Atomic Line Center
+%                     atomic_LineCenter = 119.48; % 49S Thermal 2016-07-02
+%                     %% Trap Frequencies
+%                     trapfreqZ = 2*pi*323; % vertical
+%                     trapfreqZ_error = 2*pi*1;
+%                     trapfreqX = 0.85*trapfreqZ;
+%                     trapfreqX_error = 2*pi*5;
+%                     trapfreqY = trapfreqX;
+%                     trapfreqY_error = trapfreqX_error;                    
+%                 case {'BEC'}
+%                     %% Title
+%                     titleString = {'5s49s {}^3S_1 BEC'};
+%                     %% Atomic Line Center
+%                     atomic_LineCenter = 119.44; % 49S BEC 2016-02-2
+%                     %% Trap Frequencies
+%                     trapfreqZ = 2*pi*125;
+%                     trapfreqZ_error = 2*pi*1;
+%                     trapfreqX = 2*pi*104;
+%                     trapfreqX_error = 2*pi*5;
+%                     trapfreqY = trapfreqX;
+%                     trapfreqY_error = trapfreqX_error;  
+%             end
+%         case 60
+%             %% Electric Field Parameters
+%             FieldCalibration= 224/224;%224/227, ratio of calculated ionization field of 38s and measured field of 38s, 2015.09.25
+%             Potential2Field = 0.3;% cm^-1, conversion between potential at atoms to field at atoms. Chamber is ground.
+%             MaxFieldRampVoltage = 185.37; % 1745V saturation potential difference across ionization plates
+%             MaxFieldRampVoltage_error = 0.06; 
+%             FieldRampTimeConstant = 9.25e-6; % 8.77us time constant
+%             FieldRampTimeConstant_error = 0.01e-6;
+%             FieldRampTimeOffset = 1.94e-6; % 0.26us time offset
+%             FieldRampTimeOffset_error = 0.01e-6;    
+%             %% Atomic Line Center
+%             switch sampleType               
+%                 case {'Thermal'}
+%                     %% Title
+% %                     titleString = {'n = 60 Thermal'};
+%                     titleString = {'5s60s {}^3S_1 Thermal'};
+%                     %% Atomic Line Center
+%                     atomic_LineCenter = 110.9; % 60S Thermal 2016-06-19
+%                     %% Trap Frequencies
+%                     trapfreqZ = 2*pi*247; % vertical
+%                     trapfreqZ_error = 2*pi*1;
+%                     trapfreqX = 0.85*trapfreqZ;
+%                     trapfreqX_error = 2*pi*5;
+%                     trapfreqY = trapfreqX;
+%                     trapfreqY_error = trapfreqX_error;
+% 
+%                 case {'BEC'}
+%                     %% Title
+%                     titleString = {'5s60s {}^3S_1 BEC'};
+%                     %% Atomic Line Center
+%                     atomic_LineCenter = 111.0;
+%                     %% Trap Frequencies
+%                     trapfreqZ = 2*pi*133; % vertical %200mV
+%                     trapfreqZ_error = 2*pi*1;
+%                     trapfreqX = 2*pi*115;
+%                     trapfreqX_error = 2*pi*5;
+%                     trapfreqY = trapfreqX;
+%                     trapfreqY_error = trapfreqX_error; 
+%             end
+%         case 72
+%             %% Electric Field Parameters
+%             FieldCalibration= 224/224;%224/227, ratio of calculated ionization field of 38s and measured field of 38s, 2015.09.25
+%             Potential2Field = 0.3;% cm^-1, conversion between potential at atoms to field at atoms. Chamber is ground.
+%             MaxFieldRampVoltage = 100; % saturation potential difference across ionization plates
+%             MaxFieldRampVoltage_error = 0.06; 
+%             FieldRampTimeConstant = 1.5e-6; % 
+%             FieldRampTimeConstant_error = 0.01e-6;
+%             FieldRampTimeOffset = 0.2; % 0.26us time offset
+%             FieldRampTimeOffset_error = 0.01e-6;    
+%             %% Atomic Line Center
+%             switch sampleType               
+%                 case {'Thermal'}
+%                     %% Title
+%                     titleString = {'5s72s {}^3S_1 Thermal'};
+%                     %% Atomic Line Center
+%                     atomic_LineCenter = 120.8; % 72S Thermal 2016.05.18
+%                     %% Trap Frequencies
+%                     trapfreqZ = 2*pi*243; % vertical %% 
+%                     trapfreqZ_error = 2*pi*1;
+%                     trapfreqX = 0.85*trapfreqZ;
+%                     trapfreqX_error = 2*pi*5;
+%                     trapfreqY = trapfreqX;
+%                     trapfreqY_error = trapfreqX_error;                   
+% 
+%                 case {'BEC'}
+%                     %% Title
+%                     titleString = {'5s72s {}^3S_1 BEC'};
+%                     %% Atomic Line Center
+%                     atomic_LineCenter = 120.8;
+%                     %% Trap Frequencies
+%                     trapfreqZ = 2*pi*115; % vertical %200mV
+%                     trapfreqZ_error = 2*pi*1;
+%                     trapfreqX = 2*pi*96;
+%                     trapfreqX_error = 2*pi*5;
+%                     trapfreqY = 2*pi*96;
+%                     trapfreqY_error = trapfreqX_error; 
+%             end               
+%     end
+% %}
+% %% 
     %% other
-if lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCS_Spectrum_Fit')) ||...
-        lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCS_High_Resolution')) ||...
-        lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCS_Indiv_UV_Spectrum')) ||...
-        lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCS_UV_Spectrum_Indiv_SFI')) ||...
-        lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCS_SFI_Dynamical_Evolution')) ||...
-        lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCP_Signal_vs_Density')) ||...
-        lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCS_UVFrequency_Spectrum'))%if element in lcl_logicFitLine corresponding to MCS_Spectrum_Fit is 1, then run through all the MCS analysis
-    get_indiv_batch_data_MCS = 1; 
-    
-    EvaporationVoltages = 0; %set to 1 to extract trap frequencies by looking at columns of batch files that dictate trajectory parameters, otherwise will use a singular column in the batch files. the latter is used when the experiments are done with fixed power
-    if EvaporationVoltages 
-        warning('Have to check that I didnt break the code when EvaporationVoltages is set to 1 in analyVar.')
-    end
-    
-    Density_Calc = 2; %1 to calculate density via the MCS signal; say the ratio of denisty to initial density is the same as the ratio of signal to initial signal.
-    %set to 2 to calculate density using the ODT trap decay rate and the
-    %Rydberg excitation rate and assign each loop a time state, then use a
-    %rate equation to find the density of each loop.
-    
-    UV_Freq_Spectra = 0; %set to 1 plot signal vs UV frequency
-    
-    FeatureBinRange_Atom{1}  = [30:34];     %41P
-    FeatureBinRange_Atom{2}  = [34:39];     %40P
-    FeatureBinRange_Atom{3}  = [39:44];     %39P
-    FeatureBinRange_Atom{4}  = [44:51];     %39S or 38P
-    FeatureBinRange_Atom{5}  = [53:53];     %38S; Driven Transition, 51:55
-    FeatureBinRange_Atom{6}  = [55:72];     %37S
-    FeatureBinRange_Atom{7}  = [72:86];     %36S
-    FeatureBinRange_Atom{8}  = [86:100];    %34D or 35S
-%     FeatureBinRange_Atom{9}  = [100:116];   %34P
-%     FeatureBinRange_Atom{10} = [116:131];   %
-%     FeatureBinRange_Atom{11} = [131:142];   %
-    NumFeatures = length(FeatureBinRange_Atom);
-    
-%     NumFeatures = 6; %Number of features in the SFI Spectra
-%     FeatureBinRange_Molecule = cell(1,NumFeatures);
-    FeatureBinRange_Molecule{1}  = [30:33];     %41P
-    FeatureBinRange_Molecule{2}  = [33:39];     %40P
-    FeatureBinRange_Molecule{3}  = [39:44];     %39P
-    FeatureBinRange_Molecule{4}  = [44:50];     %39S or 38P
-    FeatureBinRange_Molecule{5}  = [53:53];    %38S; Driven Transition
-%     FeatureBinRange_Molecule{6}  = [100:116];   %
-    NumFeatures = length(FeatureBinRange_Molecule);
-    
-    ForwardReverse = 0;%set to 1 if ramp delay sequency was taken twice in reverse order of each other for each loop set
-    ConstFreq = 0; %set to 1 if frequency was not varied but ramp delay was
-    Norm_to_Number_of_Ramps = 0; %1 to normalize to the number of ramps; assume that each ramp gets it's own column in the mcs files
-    Norm_to_AtomNum = 0; %normalize the mcs signal to the number of atom at the end of the sample.
-    
-%     which_ramps = [0, 1]; %first number tells which fraction of ramps to start looking, and second number tells, where to end
-    ShowNoSignal = 0;%if empty traces are found, print their location if 1
-    plotMCS_traces = 0;%1 if you want to plot the mcs traces
-        
-    permuationPlots = 1;
-    
-%     plotMCSTraces_Flag  = 0;%set to 1 to plot contour plots, 1 figure per line per master batch entry
-%     plotMCSTraces_counts_vs_delaytime_Flag = 0; %set to 1 to plot counts vs delay time
-%     plotAvgMCSTraces_Flag = 0;
-%     plotNonPeak_AvgMCSTraces_Flag = 0;
-%     plotAvgMCSTraces_counts_vs_delaytime_Flag = 0;
-%     plotAvgMCSTraces_counts_vs_delaytime_SumNonPeak_Flag = 0;
+% if lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCS_Spectrum_Fit')) ||...
+%         lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCS_High_Resolution')) ||...
+%         lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCS_Indiv_UV_Spectrum')) ||...
+%         lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCS_UV_Spectrum_Indiv_SFI')) ||...
+%         lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCS_SFI_Dynamical_Evolution')) ||...
+%         lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCP_Signal_vs_Density')) ||...
+%         lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCS_UVFrequency_Spectrum'))%if element in lcl_logicFitLine corresponding to MCS_Spectrum_Fit is 1, then run through all the MCS analysis
+%     get_indiv_batch_data_MCS = 1; 
 %     
-%     plotTraceBin_vs_synthFreq = 0; % 1 to plot contour plots of signal(Trace arrival bin, synth Frequency)
+%     EvaporationVoltages = 0; %set to 1 to extract trap frequencies by looking at columns of batch files that dictate trajectory parameters, otherwise will use a singular column in the batch files. the latter is used when the experiments are done with fixed power
+%     if EvaporationVoltages 
+%         warning('Have to check that I didnt break the code when EvaporationVoltages is set to 1 in analyVar.')
+%     end
 %     
-%     plot_mcs_sum = 0;%plot sum of spectra instead of plotting a fit. 
-    
-%     fitMCS_SpectraGaussian = 0; %fit to a gaussian to find integral or just sum values to find integral
-%         %if just going to use the sum of values, right now I assume even spaced
-%         %data, and we don't do anything about bad data points.
-%         MCS_Gaussian_Fit_Offset = 0;% fit an offset
-%         ShowMCSFitParameters = 0; %set to 1 to print the fitting parameters of the MCS spectra
-%         ShowMCSFits = 0;%set to 1 to show the fits of the spectra
-        
-    MCS_normalize = 0; %set to 1 to normalize to first instance of the minimum value of ramp delay time, set to 2 to normalize the first half to the minimum value of ramp delay time of the first half of delay times and similarly for second half; normalize the first half (forward) and the second half (reverse) seperatley
-    
-    StateEvolution_Fit = 1;% set to 1 to fit mcs signals vs remp delay to extract the lifetime (use if MCS_normalize = 0), set to 2 to fit to only two parameters; due to normalizing signal
-        MCS_Exponential_Fit_Offset = 0;    % set to 1 to allow for an offset coeff in the fitting
-        plot_StateEvolution = 1;
-    
-    MCS_DecayRate_Fit = 1; % set to 1 to do linear fit of decay rate vs density
-        NumStdDeviations = 3; %set to 0 to keep all data, set to any other possitive value to keep data of decay rate within this many standard deviations of the mean
-    plot_MCS_DecayRate_Fit = 1;
-    
-else 
-    get_indiv_batch_data_MCS = 0;%if the plug in is not initialized then don't do any of the MCS analysis
-end
-%%%%%%%
+%     Density_Calc = 2; %1 to calculate density via the MCS signal; say the ratio of denisty to initial density is the same as the ratio of signal to initial signal.
+%     %set to 2 to calculate density using the ODT trap decay rate and the
+%     %Rydberg excitation rate and assign each loop a time state, then use a
+%     %rate equation to find the density of each loop.
+%     
+%     UV_Freq_Spectra = 0; %set to 1 plot signal vs UV frequency
+%     
+%     FeatureBinRange_Atom{1}  = [30:34];     %41P
+%     FeatureBinRange_Atom{2}  = [34:39];     %40P
+%     FeatureBinRange_Atom{3}  = [39:44];     %39P
+%     FeatureBinRange_Atom{4}  = [44:51];     %39S or 38P
+%     FeatureBinRange_Atom{5}  = [53:53];     %38S; Driven Transition, 51:55
+%     FeatureBinRange_Atom{6}  = [55:72];     %37S
+%     FeatureBinRange_Atom{7}  = [72:86];     %36S
+%     FeatureBinRange_Atom{8}  = [86:100];    %34D or 35S
+% %     FeatureBinRange_Atom{9}  = [100:116];   %34P
+% %     FeatureBinRange_Atom{10} = [116:131];   %
+% %     FeatureBinRange_Atom{11} = [131:142];   %
+%     NumFeatures = length(FeatureBinRange_Atom);
+%     
+% %     NumFeatures = 6; %Number of features in the SFI Spectra
+% %     FeatureBinRange_Molecule = cell(1,NumFeatures);
+%     FeatureBinRange_Molecule{1}  = [30:33];     %41P
+%     FeatureBinRange_Molecule{2}  = [33:39];     %40P
+%     FeatureBinRange_Molecule{3}  = [39:44];     %39P
+%     FeatureBinRange_Molecule{4}  = [44:50];     %39S or 38P
+%     FeatureBinRange_Molecule{5}  = [53:53];    %38S; Driven Transition
+% %     FeatureBinRange_Molecule{6}  = [100:116];   %
+%     NumFeatures = length(FeatureBinRange_Molecule);
+%     
+%     ForwardReverse = 0;%set to 1 if ramp delay sequency was taken twice in reverse order of each other for each loop set
+%     ConstFreq = 0; %set to 1 if frequency was not varied but ramp delay was
+%     Norm_to_Number_of_Ramps = 0; %1 to normalize to the number of ramps; assume that each ramp gets it's own column in the mcs files
+%     Norm_to_AtomNum = 0; %normalize the mcs signal to the number of atom at the end of the sample.
+%     
+% %     which_ramps = [0, 1]; %first number tells which fraction of ramps to start looking, and second number tells, where to end
+%     ShowNoSignal = 0;%if empty traces are found, print their location if 1
+%     plotMCS_traces = 0;%1 if you want to plot the mcs traces
+%         
+%     permuationPlots = 1;
+%     
+% %     plotMCSTraces_Flag  = 0;%set to 1 to plot contour plots, 1 figure per line per master batch entry
+% %     plotMCSTraces_counts_vs_delaytime_Flag = 0; %set to 1 to plot counts vs delay time
+% %     plotAvgMCSTraces_Flag = 0;
+% %     plotNonPeak_AvgMCSTraces_Flag = 0;
+% %     plotAvgMCSTraces_counts_vs_delaytime_Flag = 0;
+% %     plotAvgMCSTraces_counts_vs_delaytime_SumNonPeak_Flag = 0;
+% %     
+% %     plotTraceBin_vs_synthFreq = 0; % 1 to plot contour plots of signal(Trace arrival bin, synth Frequency)
+% %     
+% %     plot_mcs_sum = 0;%plot sum of spectra instead of plotting a fit. 
+%     
+% %     fitMCS_SpectraGaussian = 0; %fit to a gaussian to find integral or just sum values to find integral
+% %         %if just going to use the sum of values, right now I assume even spaced
+% %         %data, and we don't do anything about bad data points.
+% %         MCS_Gaussian_Fit_Offset = 0;% fit an offset
+% %         ShowMCSFitParameters = 0; %set to 1 to print the fitting parameters of the MCS spectra
+% %         ShowMCSFits = 0;%set to 1 to show the fits of the spectra
+%         
+%     MCS_normalize = 0; %set to 1 to normalize to first instance of the minimum value of ramp delay time, set to 2 to normalize the first half to the minimum value of ramp delay time of the first half of delay times and similarly for second half; normalize the first half (forward) and the second half (reverse) seperatley
+%     
+%     StateEvolution_Fit = 1;% set to 1 to fit mcs signals vs remp delay to extract the lifetime (use if MCS_normalize = 0), set to 2 to fit to only two parameters; due to normalizing signal
+%         MCS_Exponential_Fit_Offset = 0;    % set to 1 to allow for an offset coeff in the fitting
+%         plot_StateEvolution = 1;
+%     
+%     MCS_DecayRate_Fit = 1; % set to 1 to do linear fit of decay rate vs density
+%         NumStdDeviations = 3; %set to 0 to keep all data, set to any other possitive value to keep data of decay rate within this many standard deviations of the mean
+%     plot_MCS_DecayRate_Fit = 1;
+%     
+% else 
+%     get_indiv_batch_data_MCS = 0;%if the plug in is not initialized then don't do any of the MCS analysis
+% end
+% %%%%%%%
 
 
 % Plotting presentation
@@ -466,6 +493,7 @@ Epsilon0        = 8.854187817e-12;          %F/m, permittivity of free space
 SpeedOfLight    = 2.99792458e8;             %m/s, speed of light
 aBohr           = 5.2917721067e-11;         %m, Bohr radius
 QDefect         = 3.372;                    %unitless, Quantum Defect for 3S0 states, n>20
+
 switch isotope
     case 84
         a84 = 123*aBohr;                    %m, 84Sr scattering length
