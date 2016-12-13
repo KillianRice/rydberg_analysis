@@ -65,6 +65,7 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'Cloud_Density'...                  %18
                     'MCP_Signal_vs_Density'...          %19
                     'BEC_Horizontal_Trap_Frequency',... %20
+                    'MCS_Integrated_SFI_Spectrum',...   %21
                     };
 plugInVec = [15];
 
@@ -109,6 +110,7 @@ switch state
         quantumDefect = 2.636;
     case '3D3'
         quantumDefect = 2.63;
+end
 
 nStar = quantumNumberN - quantumDefect;
         
@@ -158,8 +160,7 @@ SumCounts = 0;
 %% Photon Counter
 plotCounts_SR400 = 0;%photon counter
 
-% %% legacy code
-% %{legacy code
+
 % %% MCS Flags
 %     %% options for MCS_UVFrequency_Spectrum and MCS_UV_Spectrum_Indiv_SFI
 %     %% Which principal quantum number n
@@ -322,7 +323,6 @@ plotCounts_SR400 = 0;%photon counter
 %                     trapfreqY_error = trapfreqX_error; 
 %             end               
 %     end
-% %}
 % %% 
     %% other
 % if lcl_logicFitLine(strcmpi(lcl_validFitLine,'MCS_Spectrum_Fit')) ||...
@@ -699,7 +699,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_Pulsed_Dressing';
+analyPrefix     = '_Singlet_SFI';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
