@@ -140,6 +140,8 @@ if analyVar.UseImages
     else
         avgDataset = [];
 end
+
+if analyVar.UseMCS
     
     
     

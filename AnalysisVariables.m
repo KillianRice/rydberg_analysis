@@ -69,7 +69,7 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     };
 plugInVec = [15];
 
-UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
+UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
 % Common Plotting flags
 
