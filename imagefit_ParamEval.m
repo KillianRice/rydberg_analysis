@@ -142,9 +142,8 @@ if analyVar.UseImages
 end
     
     
-    
-    
-end
+
+
 %% Higher order parameter fitting
 % Using the extracted parameters from above (i.e. number) we can call additional functions specified in
 % AnalysisVariables to analyze and fit higher order parameters. For example, if the scans show a resonance

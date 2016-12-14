@@ -54,20 +54,21 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'TOF_Temperature',...               %07
                     'Phase_Space_Density',...           %08
                     'Rabi_Oscillations',...             %09
-                    'MCS_Spectrum_Fit',...              %10 %use for lifetime paper
-                    'MCS_High_Resolution',...           %11
-                    'MCS_UVFrequency_Spectrum',...      %12
-                    'MCS_UV_Spectrum_Indiv_SFI',...     %13
-                    'MCP_PulseHeightDistribution',...   %14
+                    'MCS_Spectrum_Fit',...              %10 %deprecated 2016.12.13 %use for lifetime paper
+                    'MCS_High_Resolution',...           %11 %deprecated 2016.12.13
+                    'MCS_UVFrequency_Spectrum',...      %12 %deprecated 2016.12.13
+                    'MCS_UV_Spectrum_Indiv_SFI',...     %13 %deprecated 2016.12.13
+                    'MCP_PulseHeightDistribution',...   %14 %deprecated 2016.12.13
                     'gaussian_lineshape',...            %15
-                    'MCS_SFI_Dynamical_Evolution',...   %16
-                    'MCS_Indiv_UV_Spectrum',...         %17
+                    'MCS_SFI_Dynamical_Evolution',...   %16 %deprecated 2016.12.13
+                    'MCS_Indiv_UV_Spectrum',...         %17 %deprecated 2016.12.13
                     'Cloud_Density'...                  %18
-                    'MCP_Signal_vs_Density'...          %19
+                    'MCP_Signal_vs_Density'...          %19 %deprecated 2016.12.13
                     'BEC_Horizontal_Trap_Frequency',... %20
                     'MCS_Integrated_SFI_Spectrum',...   %21
+                    'MCS_Cum_SFI',...                   %22
                     };
-plugInVec = [15];
+plugInVec = [21];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -113,7 +114,7 @@ switch state
 end
 
 nStar = quantumNumberN - quantumDefect;
-        
+mcs_roi = [8 -1];
         
 %% BACKGROUND SUBTRACTION ROUTINE
 %%-----------------------------------------------------------------------%%
