@@ -16,6 +16,9 @@ indivDataset = cell(analyVar.numBasenamesAtom,1);
 
 %% Print Information about what is being analyzed and how
 disp(['Analyzing ' num2str(analyVar.numBasenamesAtom) ' scans'])
+if analyVar.UseMCS
+    disp('Analysing SFI')
+end
 if analyVar.UseImages
     disp('Analysing Images')
     if strcmp(analyVar.sampleType, 'BEC')
@@ -80,32 +83,20 @@ for basenameNum = 1:analyVar.numBasenamesAtom
         indivBatch.CounterSR400 = size(indivBatch.fileSR400,1);
     end
 %%    
-    if analyVar.get_indiv_batch_data_MCS
+    if analyVar.UseMCS
         indivBatchMCS = textscan(fopen(batchfileMCS), MCSLineFormat, 'commentstyle', '%');
         indivBatch.fileMCS          = indivBatchMCS{:,1};
         indivBatch.secondIndVar     = indivBatchMCS{:,2}; %array of the values of the second independant variable in a 2-D scan; e.g. the delay time of ramps when laser f is in a for loop inside a for loop over ramp delay times
         indivBatch.CounterMCS       = indivBatch.CounterAtom;%number of entries in a batch file
         
-        [mcsSpectra, timedelayOrderMatrix]= deal(cell(indivBatch.CounterMCS,1));%cell-array of size equal to the number of frequency points
+        indivBatch.mcsSpectra = cell(indivBatch.CounterMCS,1);
         for bIndex = 1:indivBatch.CounterMCS %cycle through each frequency point
-            %% Read in the txt file that has the values of ramp delay times
-            NameLength = length(indivBatch.fileAtom{bIndex});
-            FileIndex = indivBatch.fileAtom{bIndex}(NameLength-2:NameLength);
-            RampDelay_Address=fullfile(analyVar.dataDir,...
-                [char(analyVar.basenamevectorAtom(basenameNum)) '_TauArray' FileIndex '.txt']);
-            timedelayOrderMatrix{bIndex} = dlmread(RampDelay_Address,'\t');
-            fclose all;
-            
             %% Read in the MCS raw data
             MCS_Address = [analyVar.dataDir char(indivBatch.fileMCS(bIndex))];
-            mcsSpectra{bIndex} = load(MCS_Address);
+            indivBatch.mcsSpectra{bIndex} = dlmread(MCS_Address, '\t');
             
-            fclose all;
             
         end
-
-        indivBatch.mcsSpectra = mcsSpectra;
-        indivBatch.timedelayOrderMatrix = timedelayOrderMatrix;
 
     end
     
