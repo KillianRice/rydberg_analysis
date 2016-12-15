@@ -84,6 +84,8 @@ for basenameNum = 1:analyVar.numBasenamesAtom
     end
 %%    
     if analyVar.UseMCS
+        indivBatch.mcs_roiMin = analyVar.mcs_roiStart(basenameNum);
+        indivBatch.mcs_roiMax = analyVar.mcs_roiEnd(basenameNum);
         indivBatchMCS = textscan(fopen(batchfileMCS), MCSLineFormat, 'commentstyle', '%');
         indivBatch.fileMCS          = indivBatchMCS{:,1};
         indivBatch.secondIndVar     = indivBatchMCS{:,2}; %array of the values of the second independant variable in a 2-D scan; e.g. the delay time of ramps when laser f is in a for loop inside a for loop over ramp delay times
