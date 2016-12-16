@@ -18,6 +18,7 @@ function indivDataset = MCS_Cum_SFI_Field( analyVar, indivDataset, avgDataset)
         
         indivDataset{i}.cumSFI(:,2:end) = totsfi;
         indivDataset{i}.SFIvoltages = polyval(ramp_coeffs, indivDataset{i}.cumSFI(:,1)*10^6);
+        sfiTimes = indivDataset{i}.cumSFI(roi_min:roi_max,1)*10^6;
         
         figure
         hold on
@@ -33,6 +34,16 @@ function indivDataset = MCS_Cum_SFI_Field( analyVar, indivDataset, avgDataset)
         ylabel('Total MCS Counts')
         %shading flat
         hold off
+        
+        figure
+        plot(sfiTimes, polyval(ramp_coeffs, sfiTimes), 'o-');
+        xlabel('Time (us)')
+        ylabel('Ramp Voltage (V)')
+        
+        figure
+        plot(polyval(ramp_coeffs,sfiTimes), polyval(polyder(ramp_coeffs), sfiTimes), 'o-');
+        xlabel('Ramp Voltage (V)')
+        ylabel('Slew Rate (V/us)')
         
     end
 
