@@ -65,10 +65,11 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'Cloud_Density'...                  %18
                     'MCP_Signal_vs_Density'...          %19 %deprecated 2016.12.13
                     'BEC_Horizontal_Trap_Frequency',... %20
-                    'MCS_Integrated_SFI_Spectrum',...   %21
-                    'MCS_Cum_SFI',...                   %22
+                    'MCS_Integrated_SFI_Spectrum',...   %21 Plot integrated sfi vs. independent variable
+                    'MCS_Cum_SFI',...                   %22 Plot sum of all sfi from one scan vs time
+                    'MCS_Cum_SFI_Field',...             %23 Plot sum of all sfi from one scan vs field/voltage
                     };
-plugInVec = [21 22];
+plugInVec = [21 23];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -115,6 +116,9 @@ end
 
 nStar = quantumNumberN - quantumDefect;
 mcs_roi = [8 -1];
+
+positive_ramp_file = './ramps/n60/100v_pos.csv';
+negative_ramp_file = './ramps/n60/100v_neg.csv';
         
 %% BACKGROUND SUBTRACTION ROUTINE
 %%-----------------------------------------------------------------------%%
