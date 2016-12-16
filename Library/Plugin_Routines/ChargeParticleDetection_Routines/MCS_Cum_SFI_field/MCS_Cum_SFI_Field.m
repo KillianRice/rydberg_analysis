@@ -1,7 +1,11 @@
 function indivDataset = MCS_Cum_SFI_Field( analyVar, indivDataset, avgDataset)
 %MCS_CUM_SFI_FIELD Summary of this function goes here
 %   Detailed explanation goes here
-    
+
+    figure
+    hold on
+    xlabel('Total Plate Voltage Difference (V)')
+    ylabel('Total MCS Counts')
     for i = 1:analyVar.numBasenamesAtom
         
         ramp_coeffs = param_extract_ramp_coeffs(analyVar, indivDataset{i});
@@ -20,32 +24,27 @@ function indivDataset = MCS_Cum_SFI_Field( analyVar, indivDataset, avgDataset)
         indivDataset{i}.SFIvoltages = polyval(ramp_coeffs, indivDataset{i}.cumSFI(:,1)*10^6);
         sfiTimes = indivDataset{i}.cumSFI(roi_min:roi_max,1)*10^6;
         
-        figure
-        hold on
         for s = 1:size(totsfi(1,:),2)
-            bar(indivDataset{i}.SFIvoltages(roi_min:roi_max),indivDataset{i}.cumSFI(roi_min:roi_max,s+1),100);
+            plot(indivDataset{i}.SFIvoltages(roi_min:roi_max),indivDataset{i}.cumSFI(roi_min:roi_max,s+1),'-o','Color',analyVar.COLORS(i,:));
             mean = sum(indivDataset{i}.SFIvoltages(roi_min:roi_max).*indivDataset{i}.cumSFI(roi_min:roi_max,s+1))/sum(indivDataset{i}.cumSFI(roi_min:roi_max,s+1));
             std = sqrt(sum(indivDataset{i}.cumSFI(roi_min:roi_max,s+1).*(indivDataset{i}.SFIvoltages(roi_min:roi_max)-mean).^2)/sum(indivDataset{i}.cumSFI(roi_min:roi_max,s+1)));
             disp(['mean: ' num2str(mean)])
             disp(['std: ' num2str(std)])
             
         end
-        xlabel('Total Plate Voltage Difference (V)')
-        ylabel('Total MCS Counts')
-        %shading flat
-        hold off
-        
-        figure
-        plot(sfiTimes, polyval(ramp_coeffs, sfiTimes), 'o-');
-        xlabel('Time (us)')
-        ylabel('Ramp Voltage (V)')
-        
-        figure
-        plot(polyval(ramp_coeffs,sfiTimes), polyval(polyder(ramp_coeffs), sfiTimes), 'o-');
-        xlabel('Ramp Voltage (V)')
-        ylabel('Slew Rate (V/us)')
         
     end
+    hold off
+    
+    figure
+    plot(sfiTimes, polyval(ramp_coeffs, sfiTimes), 'o-');
+    xlabel('Time (us)')
+    ylabel('Ramp Voltage (V)')
+
+    figure
+    plot(polyval(ramp_coeffs,sfiTimes), polyval(polyder(ramp_coeffs), sfiTimes), 'o-');
+    xlabel('Ramp Voltage (V)')
+    ylabel('Slew Rate (V/us)')
 
 end
 
