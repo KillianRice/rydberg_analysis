@@ -117,8 +117,16 @@ end
 nStar = quantumNumberN - quantumDefect;
 mcs_roi = [8 -1];
 
-positive_ramp_file = './ramps/n60/100v_pos.csv';
-negative_ramp_file = './ramps/n60/100v_neg.csv';
+positive_ramp_file = './ramps/n120/35v_pos.csv';
+negative_ramp_file = './ramps/n120/35v_neg.csv';
+
+%% For high n spectra running the signlet laser open loop
+% manually declare initial and final wavelengths for each scan you are
+% analysing, if there is a mismatch between number of scans and number of
+% ranges there will be a warning and only the first range will be used
+
+inital_Wavelength = [12112.755];
+final_Wavelength = [12112.923];
         
 %% BACKGROUND SUBTRACTION ROUTINE
 %%-----------------------------------------------------------------------%%
@@ -171,7 +179,7 @@ TimeOrDetune  = 'SpecSynth'; % Valid options are 'Time', 'Detuning', 'Repetition
 
 titleFontSize = 18;
 axisfontsize  = 14;
-markerSize    = 10;
+markerSize    = 5;
 
 scalesize = 1.5; % set to one for PRL size plots
 FCmarkerSize    = 3*scalesize;
@@ -439,7 +447,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_Singlet_SFI_n60';
+analyPrefix     = '_Singlet_SFI_high_n';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
