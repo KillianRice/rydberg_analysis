@@ -50,7 +50,7 @@ for basenameNum = 1:analyVar.numBasenamesAtom
     % print batch name
     disp(char(analyVar.basenamevectorAtom(basenameNum)));
     
-    batchLineFormat = '%q%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f';
+    batchLineFormat = '%q%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f';
     %batch line format reads as follows:
     %Scan name and image number \t independent parameter value \t a bunch
     %of old stuff up to "wavemeteroff" \t 3 beam vca 1 static voltage value
@@ -70,6 +70,12 @@ for basenameNum = 1:analyVar.numBasenamesAtom
     indivBatch = cell2struct(cat(2,indivBatchAtomData,indivBatchBackData),cat(2,analyVar.indivBatchAtomVar,analyVar.indivBatchBackVar),2);
     indivBatch.CounterAtom = size(indivBatch.fileAtom,1); % determine how many atom files in batch associated with this basename
     indivBatch.CounterBack = size(indivBatch.fileBack,1); % determine how many background files in batch associated with this basename
+%%
+    if analyVar.UseWavemeter
+        indivBatch.imagevcoAtom = indivBatch.wavemeterAtom;
+        indivBatch.imagevcoBack = indivBatch.wavemeterBack;
+    end
+    
 %%    
     if analyVar.plotCounts
         indivBatchPicoData = textscan(fopen(batchfilePico), picoBatchLineFormat, 'commentstyle', '%');

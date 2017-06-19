@@ -69,10 +69,11 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'MCS_Cum_SFI',...                   %22 Plot sum of all sfi from one scan vs time
                     'MCS_Cum_SFI_Field',...             %23 Plot sum of all sfi from one scan vs field/voltage
                     };
-plugInVec = [21 23];
+plugInVec = [];
 
-UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
-UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
+UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
+UseMCS = 0; % set to 1 to use mcs data, set to 0 to ignore mcs data
+UseWavemeter = 1; % set to 1 to plot with wavemeter reading on the x axis, 0 for independent var
 % Common Plotting flags
 
     lcl_logicFitLine = zeros(1,length(lcl_validFitLine));
@@ -359,6 +360,7 @@ indivBatchAtomVar = {
     'sigBECParamAtom' %             17  left constant
     'WeightedBECPeakAtom' %         18  left constant
     'BECamplitudeParameterAtom' %   19  left constant
+    'wavemeterAtom'             %   20  wavemeter reading
     };
 indivBatchBackVar = {
     'fileBack'
@@ -380,6 +382,7 @@ indivBatchBackVar = {
     'sigBECParamBack' %left constant
     'WeightedBECPeakBack' %left constant
     'BECamplitudeParameterBack' %left constant
+    'wavemeterBack'             % wavemeter reading
     };
         
 %% Choose windows to analyze
@@ -447,7 +450,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_Singlet_SFI_high_n';
+analyPrefix     = '_test';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
