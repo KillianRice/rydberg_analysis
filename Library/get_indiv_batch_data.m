@@ -72,8 +72,7 @@ for basenameNum = 1:analyVar.numBasenamesAtom
     indivBatch.CounterBack = size(indivBatch.fileBack,1); % determine how many background files in batch associated with this basename
 %%
     if analyVar.UseWavemeter
-        indivBatch.imagevcoAtom = indivBatch.wavemeterAtom;
-        indivBatch.imagevcoBack = indivBatch.wavemeterBack;
+        indivBatch = param_extract_ind_var_to_wavemeter(analyVar, indivBatch);
     end
     
 %%    
