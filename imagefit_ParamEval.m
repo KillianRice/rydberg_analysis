@@ -162,12 +162,10 @@ for lineFitIter = 1:length(analyVar.fitLineFunc)
     % Call function with default arguments
     funcOut = funcHand(analyVar,indivDataset,avgDataset);
 end
-%%%%%%%%%%%%%%%%%%%%%%%% might break code
-% for index = 1:length(indivDataset)
-%     indivDataset{index} = funcOut{index};
-% end
-%%%%%%%%%%%%%%%%%%%%%%%%%
 
+for index = 1:length(indivDataset)
+	indivDataset{index} = funcOut.indivDataset{index};
+end
 
 %% Wrap Up
 fclose('all'); % Close any file handles which may be open

@@ -73,7 +73,7 @@ plugInVec = [21];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
-UseWavemeter = 1; % set to 1 to plot with wavemeter reading on the x axis, 0 for independent var
+UseWavemeter = 0; % set to 1 to plot with wavemeter reading on the x axis, 0 for independent var
 % Common Plotting flags
 
     lcl_logicFitLine = zeros(1,length(lcl_validFitLine));
@@ -450,7 +450,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_n78_spectroscopy';
+analyPrefix     = '_87Sr_n78_Rydberg_Spectroscopy';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,

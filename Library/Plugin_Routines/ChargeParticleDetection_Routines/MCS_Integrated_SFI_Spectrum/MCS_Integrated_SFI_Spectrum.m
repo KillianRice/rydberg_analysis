@@ -1,4 +1,4 @@
-function indivDataset = MCS_Integrated_SFI_Spectrum(analyVar, indivDataset, avgDataset)
+function output = MCS_Integrated_SFI_Spectrum(analyVar, indivDataset, avgDataset)
     
     % MCS_Integrated_SFI_Spectrum - Joe Whalen 2016.12.14
     % Generate a plot of MCS counts vs. independent variable
@@ -11,4 +11,8 @@ function indivDataset = MCS_Integrated_SFI_Spectrum(analyVar, indivDataset, avgD
     %% plot the data
     plot_MCS_Integrated_SFI_Spectrum(analyVar, indivDataset);
     
+    %% Pack workspace into a structure for output
+    % If you don't want a variable output prefix it with lcl_
+    output = who();
+    output = v2struct(cat(1,'fieldNames',output(cellfun('isempty',regexp(output,'\<lcl_')))));
 end

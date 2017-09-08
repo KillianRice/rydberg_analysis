@@ -117,7 +117,7 @@ if avgAutoFlag
             repmat(indVar,1,2)',[avgCntrX'; avgCntrY']);
         
         %% Fitting (if flagged)
-        if oscFitFlag & avgAutoFlag
+        if oscFitFlag && avgAutoFlag
             figure;
             if strcmpi('x',oscAxis)
                 title('X - Axis'); fitCntr = avgCntrX;
