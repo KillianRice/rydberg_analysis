@@ -2,6 +2,10 @@ function [output_args] = gaussian_lineshape(analyVar,indivDataset,avgDataset)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
+if analyVar.UseMCS == 1
+    indivDataset = param_extract_sfi_integral(analyVar, indivDataset);
+end
+
 NumStates = analyVar.numBasenamesAtom;
 
 %% Frequency
@@ -33,10 +37,13 @@ end
 for mbIndex = 1:NumStates
     NumFreq = indivDataset{mbIndex}.CounterAtom;
     for bIndex = 1:NumFreq
-        Signal = indivDataset{mbIndex}.winTotNum(bIndex);
-%         Signal = nansum(Signal,1);
-%         Signal = squeeze(Signal);
-        
+        if analyVar.UseMCS == 1
+            Signal = indivDataset{mbIndex}.sfiIntegral(bIndex);
+    %         Signal = nansum(Signal,1);
+    %         Signal = squeeze(Signal);
+        else
+            Signal = indivDataset{mbIndex}.winTotNum(bIndex);
+        end
         yData{UniqueFreqIndex{mbIndex}{bIndex}} = cat(1, yData{UniqueFreqIndex{mbIndex}{bIndex}}, Signal);
 
     end

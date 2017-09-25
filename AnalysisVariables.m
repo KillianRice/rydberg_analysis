@@ -69,7 +69,7 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'MCS_Cum_SFI',...                   %22 Plot sum of all sfi from one scan vs time
                     'MCS_Cum_SFI_Field',...             %23 Plot sum of all sfi from one scan vs field/voltage
                     };
-plugInVec = [21];
+plugInVec = [21 15];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -450,7 +450,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_87Sr_n78_Rydberg_Spectroscopy';
+analyPrefix     = '_87Sr_Rydberg_Spectroscopy';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
