@@ -59,7 +59,7 @@ for basenameNum = 1:analyVar.numBasenamesAtom
     
     picoBatchLineFormat = '%q';
     SR400LineFormat = '%q%f%f%f';
-    MCSLineFormat = '%q%f';% file name \t independant variable
+    MCSLineFormat = '%q%f%f%f%f%f';% file name \t independant variable
     
     %read in all atom files, no limit
     
