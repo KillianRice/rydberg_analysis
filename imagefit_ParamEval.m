@@ -163,8 +163,10 @@ for lineFitIter = 1:length(analyVar.fitLineFunc)
     funcOut = funcHand(analyVar,indivDataset,avgDataset);
 end
 
-for index = 1:length(indivDataset)
-	indivDataset{index} = funcOut.indivDataset{index};
+if exist('funcOut')
+    for index = 1:length(indivDataset)
+        indivDataset{index} = funcOut.indivDataset{index};
+    end
 end
 
 %% Wrap Up
