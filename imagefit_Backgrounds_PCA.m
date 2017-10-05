@@ -46,8 +46,8 @@ end
 
 %% Initialize parallel workers
 %Open matlabpool if none open
-if matlabpool('size') == 0
-     matlabpool open
+if (exist('matlabpool') && matlabpool('size') == 0)
+     matlabpool open;
 end
 
 %% Loop through each batch file listed in analyVar.basenamevectorAtom
