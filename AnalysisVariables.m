@@ -68,8 +68,9 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'MCS_Integrated_SFI_Spectrum',...   %21 Plot integrated sfi vs. independent variable
                     'MCS_Cum_SFI',...                   %22 Plot sum of all sfi from one scan vs time
                     'MCS_Cum_SFI_Field',...             %23 Plot sum of all sfi from one scan vs field/voltage
+                    'Double_Exponential',...            %24 Double Exponential fit to number
                     };
-plugInVec = [];
+plugInVec = [24];
 
 UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 0; % set to 1 to use mcs data, set to 0 to ignore mcs data
