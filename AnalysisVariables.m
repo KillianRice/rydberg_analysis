@@ -69,8 +69,9 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'MCS_Cum_SFI',...                   %22 Plot sum of all sfi from one scan vs time
                     'MCS_Cum_SFI_Field',...             %23 Plot sum of all sfi from one scan vs field/voltage
                     'Double_Exponential',...            %24 Double Exponential fit to number
+                    'Dirty_Fit',...                     %25 Edit this file to do a quick fit
                     };
-plugInVec = [24];
+plugInVec = [25];
 
 UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 0; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -88,7 +89,7 @@ end
 sampleType     = 'Thermal';  % Options are Thermal, BEC, or Lattice
 isotope        = 84; % Isotope mass used to select applicable models for fitting. Options are 84, 86, or 88 (87 not currently supported)
 detuning       = 0;  % s^-1, image beam detuning (as of 7/1/15)
-pureSample     = 0;  % Flags whether BEC samples have a thermal fraction present or not (ignored for Thermal and Lattice samples)
+pureSample     = 1;  % Flags whether BEC samples have a thermal fraction present or not (ignored for Thermal and Lattice samples)
 winToFit       = {'Central'}; % Specify which windows to fit, this generates the vector LatticeAxesFit
 binHorizontal  = 1;%binning done by camera when taking images
 binVertical    = 1;
