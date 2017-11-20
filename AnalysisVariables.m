@@ -71,7 +71,7 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'Double_Exponential',...            %24 Double Exponential fit to number
                     'Dirty_Fit',...                     %25 Edit this file to do a quick fit
                     };
-plugInVec = [25];
+plugInVec = [];
 
 UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 0; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -87,7 +87,7 @@ end
 %%-----------------------------------------------------------------------%%
 %%%% Atom cloud properties
 sampleType     = 'Thermal';  % Options are Thermal, BEC, or Lattice
-isotope        = 84; % Isotope mass used to select applicable models for fitting. Options are 84, 86, or 88 (87 not currently supported)
+isotope        = 88; % Isotope mass used to select applicable models for fitting. Options are 84, 86, or 88 (87 not currently supported)
 detuning       = 0;  % s^-1, image beam detuning (as of 7/1/15)
 pureSample     = 1;  % Flags whether BEC samples have a thermal fraction present or not (ignored for Thermal and Lattice samples)
 winToFit       = {'Central'}; % Specify which windows to fit, this generates the vector LatticeAxesFit
@@ -164,7 +164,7 @@ lsqLinBnd       = {-Inf Inf}; % Linear background terms bound, all allowed to ra
 % Flag to Load Image Data
 
 SavePlotData  = 1; % Boolean to allow aggregation of variables from plotting into output structure
-plotFitEval   = 0; % Boolean to display plots showing the fit, cloud evolution, and residuals
+plotFitEval   = 1; % Boolean to display plots showing the fit, cloud evolution, and residuals
 plotInstParam = 1; % Boolean to extract and display 1st order parameters such as temperature, size, and number
 plotMeanParam = 1; % Boolean to average instantaneous parameters across multiple scans
 plotFitLine   = 1; % Boolean to extract higher order parameters by fitting instantaneous parameters
@@ -338,6 +338,8 @@ lcl_masterBatchAtomVar = {
     'mcs_roiEnd'            % 13 last bin of MCS roi
     };
 
+colHeadersAtom = lcl_masterBatchAtomVar;
+
 lcl_masterBatchAtomVar = lcl_masterBatchAtomVar';
 lcl_masterBatchBackVar = {'basenamevectorBack' 'unusedBack'};
 
@@ -452,7 +454,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_ODT_optimization';
+analyPrefix     = '_Spin-Pol_Diagnostics';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
