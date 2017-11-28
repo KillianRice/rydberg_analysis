@@ -140,6 +140,7 @@ for iterVar = 1:length(indVarCell)
     %%% Plot axis details
 %     title(num2str(labelVec(iterVar)));
     xlabel('Time (s)'); grid on; axis tight
+    ylabel('Cloud Radius (m)');
     set(rawdataHan,'LineStyle','none','Marker','o'); 
     set(fitdataHan,'LineWidth',2,'Color','b')
     if iterVar == length(indVarCell);
