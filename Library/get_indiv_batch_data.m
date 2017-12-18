@@ -104,7 +104,6 @@ for basenameNum = 1:analyVar.numBasenamesAtom
             
             
         end
-
     end
     
     % Subplot number for plotting program
@@ -176,6 +175,10 @@ for basenameNum = 1:analyVar.numBasenamesAtom
     end
     %%%% Save the variables for each dataset into a variable containing data from all datasets listed in analyVar.basenamevectorAtom
     indivDataset{basenameNum} = orderfields(indivBatch);
+end
+
+if analyVar.UseMCS
+    indivDataset = param_extract_sfi_integral(analyVar, indivDataset);
 end
 
 %% Clean Workspace
