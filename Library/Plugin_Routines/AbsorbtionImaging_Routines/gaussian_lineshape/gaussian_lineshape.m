@@ -80,7 +80,7 @@ xlabel(analyVar.xDataLabel);
 ylabel('Atom Number');
 hold off;
 
-output_args = nan;
+output_args = [unique_Freq, yData_Average];
 
 end
 
