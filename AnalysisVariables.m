@@ -72,7 +72,7 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'Dirty_Fit',...                     %25 Edit this file to do a quick fit
                     'average_plot',...                  %26 plot averages
                     };
-plugInVec = [21 15 26];
+plugInVec = [21 26];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -455,7 +455,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_rydberg_molecules_n38';
+analyPrefix     = '_Rydberg_Molecules_n38';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
