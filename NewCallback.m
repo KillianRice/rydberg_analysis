@@ -6,7 +6,7 @@ function output_txt = myfunction(obj,event_obj)
 
 pos = get(event_obj,'Position');
 output_txt = {['X: ',num2str(pos(1),10)],...
-    ['Y: ',num2str(pos(2),10)]};
+    ['Y: ',num2str(pos(2),4)]};
 
 % If there is a Z-coordinate in the position, display it as well
 if length(pos) > 2

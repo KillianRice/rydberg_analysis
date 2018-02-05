@@ -27,10 +27,10 @@ else
 end
 
 %% Initialize parallel workers
-%Open matlabpool if none open
-if matlabpool('size') == 0
-    matlabpool open
-end
+%Open parpool if none open
+% if parpool('size') == 0
+%     parpool open
+% end
 
 %% Loop through each batch file listed in basenamevectorAtom
 parfor basenameNum = 1:analyVar.numBasenamesAtom

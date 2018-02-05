@@ -72,10 +72,10 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'Dirty_Fit',...                     %25 Edit this file to do a quick fit
                     'average_plot',...                  %26 plot averages
                     };
-plugInVec = [21 26];
+plugInVec = [];
 
-UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
-UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
+UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
+UseMCS = 0; % set to 1 to use mcs data, set to 0 to ignore mcs data
 UseWavemeter = 0; % set to 1 to plot with wavemeter reading on the x axis, 0 for independent var
 % Common Plotting flags
 
@@ -294,8 +294,8 @@ plotMeanNum   = plotMeanParam; % Mean number averaged across similar scans
 plotTemp      = plotInstParam; % Temperature of each image
 plotMeanTemp  = plotMeanParam; % Mean temperature averaged across similar scans
 
-plotSize      = plotInstParam; % Cloud radius of each image
-plotMeanSize  = plotMeanParam; % Mean radius averaged across similar scans
+plotSize      = 0; % Cloud radius of each image
+plotMeanSize  = 0; % Mean radius averaged across similar scans
 
 plotTrapFreq     = plotInstParam; % Geometric average of trap frequencies
 plotMeanTrapFreq = plotMeanParam; % Mean geometric average of trap frequencies
@@ -455,7 +455,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_Rydberg_Molecules_n38';
+analyPrefix     = '_spin_polarization';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
