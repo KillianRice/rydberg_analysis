@@ -8,6 +8,17 @@ close all
 
 % Load variables and file data
 analyVar = AnalysisVariables;
+if analyVar.numBasenamesAtom > 5
+    disp(['About to analyze ' num2str(analyVar.numBasenamesAtom) ' scans, are you sure you want to continue?']);
+    s = input('Y/N >','s');
+    while s ~= 'Y' && s ~= 'N' && s ~= 'y' && s ~= 'n'
+        s = input('Y/N >','s');
+        disp(s)
+    end
+    if s == 'n' || s == 'N'
+        return;
+    end
+end
 indivDataset = get_indiv_batch_data(analyVar);
 
 % Background fitting

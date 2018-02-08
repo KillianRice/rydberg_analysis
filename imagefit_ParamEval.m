@@ -41,6 +41,17 @@ else
 
 end
 
+if analyVar.plotFitEval && analyVar.numBasenamesAtom > 5
+    disp('You are about to generate a lot of plots! Are you sure you want to continue?');
+    s = input('Y/N >','s');
+    while s ~= 'Y' && s ~= 'N' && s ~= 'y' && s ~= 'n'
+        s = input('Y/N >','s');
+    end
+    if s == 'n' || s == 'N'
+        return;
+    end
+end
+
 %% Modify indivDataset cell to contain fit coefficients and OD image
 if analyVar.UseImages
         [indivDataset,avgDataset] = add_fit_indiv_batch(analyVar,indivDataset);
