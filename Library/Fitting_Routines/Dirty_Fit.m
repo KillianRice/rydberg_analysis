@@ -7,9 +7,12 @@ function funcOut = Dirty_Fit(analyVar, indivDataset, avgDataset)
     % form is an anonymous function of form @(coeffs,x)
     % for example @(coeffs,x) = coeffs(1) * exp(-coeffs(2)*x)
     % coeffs can have any number of elements
-    form = @(coeffs,x) coeffs(1)*exp(-coeffs(2)*x).*sin(2*pi*coeffs(3)*x+coeffs(4))+coeffs(5);
+    form = @(coeffs,x) coeffs(1)*exp(-coeffs(2)*x);
     indVarField = 'imagevcoAtom'; % The Field of an IndivDataset that is to be plotted on the X axis
-    depVarField = 'cloudRadX'; % The field of an indivdataset that is to be plotted on the y axis
+    depVarField = 'winTotNum'; % The field of an indivdataset that is to be plotted on the y axis
+    
+    xaxis_label = 'Exposure Time (ms)';
+    yaxis_label = 'Shelved Atom Number';
     
     [xdata, ydata] = getxy(indVarField, depVarField, analyVar, indivDataset, avgDataset);
     coeffs = cell(analyVar.numBasenamesAtom,1);
@@ -17,7 +20,7 @@ function funcOut = Dirty_Fit(analyVar, indivDataset, avgDataset)
     % put code for generating initial guesses here, needs to provide a
     % vector x0 with the same number of elements as the number of fitting
     % parameters
-    x0 = [102 .198 .216 -3.12 302];
+    x0 = [1e5 0.01];
     
     for i = 1:analyVar.numBasenamesAtom
         
@@ -39,8 +42,8 @@ function funcOut = Dirty_Fit(analyVar, indivDataset, avgDataset)
         hold on
         plot(xdata{i},ydata{i}, 'o')
         plot(fitx,form(coeffs{i},fitx),'r-')
-        xlabel(indVarField);
-        ylabel(depVarField);
+        xlabel(xaxis_label);
+        ylabel(yaxis_label);
         hold off
         subplot(2,1,2)
         hold on
@@ -53,6 +56,6 @@ function funcOut = Dirty_Fit(analyVar, indivDataset, avgDataset)
     end
     disp('Fit coefficients - make sure to check units')
     disp(form)
-    cellfun(@(x) disp(x), coeffs)
+    cellfun(@(x) fprintf('%.5e\n',x), coeffs)
     funcOut.indivDataset = indivDataset;
 end
