@@ -455,7 +455,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_spin_polarization';
+analyPrefix     = '_repumper_spectroscopy';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,

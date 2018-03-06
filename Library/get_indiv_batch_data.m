@@ -127,7 +127,7 @@ for basenameNum = 1:analyVar.numBasenamesAtom
             % Initialize matricies for speed
             AtomsCloud    = zeros(elCloud,indivBatch.CounterAtom);
             AtomsNotCloud = zeros(elNotCloud,indivBatch.CounterAtom);
-            rawAtomImages = zeros(prod(analyVar.matrixSize), indivBatch.CounterAtom);
+            %rawAtomImages = zeros(prod(analyVar.matrixSize), indivBatch.CounterAtom);
             for ii = 1:indivBatch.CounterAtom
                 s = [analyVar.dataDir char(indivBatch.fileAtom(ii)) analyVar.dataAtom]; 
                 sFID = fopen(s,'rb','ieee-be');
@@ -142,7 +142,7 @@ for basenameNum = 1:analyVar.numBasenamesAtom
                 % Separate Atoms into cloud part and around cloud part
                 AtomsCloud(:,ii)    = fullRawImageAtom(indivBatch.image_Index ~= 0);
                 AtomsNotCloud(:,ii) = fullRawImageAtom(indivBatch.image_Index == 1);
-                rawAtomImages(:,ii) = fullRawImageAtom(:);
+                %rawAtomImages(:,ii) = fullRawImageAtom(:);
                 
             end %%%% end of k = 1:CounterAtom
 
@@ -150,7 +150,7 @@ for basenameNum = 1:analyVar.numBasenamesAtom
             % Initialize matricies for speed
             BackgroundCloud    = zeros(elCloud,indivBatch.CounterBack);
             BackgroundNotCloud = zeros(elNotCloud,indivBatch.CounterBack);
-            rawBackImages = zeros(prod(analyVar.matrixSize), indivBatch.CounterBack);
+            %rawBackImages = zeros(prod(analyVar.matrixSize), indivBatch.CounterBack);
             for jj = 1:indivBatch.CounterBack
                 t = [analyVar.dataDir char(indivBatch.fileBack(jj)) analyVar.dataBack]; tFID = fopen(t,'rb','ieee-be');
                 fullRawImageBack = double(fread(tFID,analyVar.matrixSize,'*int16')); 
@@ -160,7 +160,7 @@ for basenameNum = 1:analyVar.numBasenamesAtom
                 
                 BackgroundCloud(:,jj)    = fullRawImageBack(indivBatch.image_Index ~= 0);
                 BackgroundNotCloud(:,jj) = fullRawImageBack(indivBatch.image_Index == 1);
-                rawBackImages(:,jj) = fullRawImageBack(:);
+                %rawBackImages(:,jj) = fullRawImageBack(:);
             end
 
             % Save Atoms and Background into the indivBatch structure
@@ -168,8 +168,8 @@ for basenameNum = 1:analyVar.numBasenamesAtom
             indivBatch.AtomsNotCloud      = AtomsNotCloud;
             indivBatch.BackgroundCloud    = BackgroundCloud;
             indivBatch.BackgroundNotCloud = BackgroundNotCloud;
-            indivBatch.rawAtomImages      = rawAtomImages;
-            indivBatch.rawBackImages      = rawBackImages;
+            %indivBatch.rawAtomImages      = rawAtomImages;
+            %indivBatch.rawBackImages      = rawBackImages;
         end
 
     end

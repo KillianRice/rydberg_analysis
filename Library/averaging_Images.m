@@ -1,4 +1,7 @@
 function averaging_Images(varargin)
+
+warning('This function will not work unless you uncomment lines 130, 145, 153, 163, 171 and 172 of get_indiv_batch_data')
+
 % Function to read in a set of images (that are all the same experimental
 % settings) and average the camera images across scans. This program will
 % take in a set of images and will write and output a new set of images
