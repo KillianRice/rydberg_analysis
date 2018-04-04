@@ -32,12 +32,12 @@ else
 end
 
 
-amplitude   = double(Fitting_Output.Coefficients('Amplitude',{'Estimate','SE'}));
-center      = double(Fitting_Output.Coefficients('Center',{'Estimate','SE'}));
-sigma       = double(Fitting_Output.Coefficients('Sigma',{'Estimate','SE'}));
+amplitude   = table2array(Fitting_Output.Coefficients('Amplitude',{'Estimate','SE'}));
+center      = table2array(Fitting_Output.Coefficients('Center',{'Estimate','SE'}));
+sigma       = table2array(Fitting_Output.Coefficients('Sigma',{'Estimate','SE'}));
 
 if offsetflag
-    offset = double(Fitting_Output.Coefficients('Offset',{'Estimate','SE'}));
+    offset = table2array(Fitting_Output.Coefficients('Offset',{'Estimate','SE'}));
 else
     offset = 0;
 end
