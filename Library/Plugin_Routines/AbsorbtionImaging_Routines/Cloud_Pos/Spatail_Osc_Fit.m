@@ -13,7 +13,7 @@ s2 = @(coeffs,t) (coeffs(2) - exp(coeffs(5).*t).*coeffs(1).*sin(2*pi*coeffs(3).*
 
 offsetGuess  = mean(pos);
 AmpGuess     = max(pos) - mean(pos);
-TGuess       = mean(diff(time(peakLoc))); 
+TGuess       = mean(time);%mean(diff(time(peakLoc))); 
 freqGuess    = 1/(TGuess);
 %phaseGuess   = time(peakLoc(1))*2*pi*freqGuess;
 phaseGuess   = 2.5;
