@@ -71,8 +71,9 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'Double_Exponential',...            %24 Double Exponential fit to number
                     'Dirty_Fit',...                     %25 Edit this file to do a quick fit
                     'average_plot',...                  %26 plot averages
+                    'breathing_mode',...                %27 fits cloud radius to a damped sine
                     };
-plugInVec = [];
+plugInVec = [3];
 
 UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 0; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -179,7 +180,7 @@ plotCounts_SR400 = 0;%photon counter
 
 
 % Plotting presentation
-TimeOrDetune  = 'SpecSynth'; % Valid options are 'Time', 'Detuning', 'Repetition', 'Voltage', 'Frequency'
+TimeOrDetune  = 'Time'; % Valid options are 'Time', 'Detuning', 'Repetition', 'Voltage', 'Frequency'
 
 titleFontSize = 18;
 axisfontsize  = 14;
@@ -455,7 +456,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_repumper_spectroscopy';
+analyPrefix     = '_optimize_fermion_odt';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
