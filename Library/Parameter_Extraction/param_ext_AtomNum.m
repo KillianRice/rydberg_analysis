@@ -78,6 +78,11 @@ for basenameNum = 1:analyVar.numBasenamesAtom
         % Total number of atoms
         winTotNum(:,k) = cellfun(@(x) funcTotNum(x),indivDataset{basenameNum}.All_fitParams{k});
         
+        %%% if 87 double the counted number of atoms %%%
+        if analyVar.isotope == 87
+            winTotNum(:,k) = winTotNum(:,k) * 2;
+        end
+        
         % Separate thermal and condensate contributions if bimodal
         if strcmpi(analyVar.InitCase,'Bimodal')
             winBECNum(:,k)  = cellfun(@(x) funcBECNum(x),indivDataset{basenameNum}.All_fitParams{k});

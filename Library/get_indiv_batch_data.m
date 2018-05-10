@@ -15,6 +15,7 @@ indivDataset = cell(analyVar.numBasenamesAtom,1);
 
 
 %% Print Information about what is being analyzed and how
+disp(['Isotope is ' num2str(analyVar.isotope) 'Sr'])
 disp(['Analyzing ' num2str(analyVar.numBasenamesAtom) ' scans'])
 if analyVar.UseMCS
     disp('Analysing SFI')
