@@ -73,10 +73,10 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'average_plot',...                  %26 plot averages
                     'breathing_mode',...                %27 fits cloud radius to a damped sine
                     };
-plugInVec = [3];
+plugInVec = [21,26];
 
-UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
-UseMCS = 0; % set to 1 to use mcs data, set to 0 to ignore mcs data
+UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
+UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
 UseWavemeter = 0; % set to 1 to plot with wavemeter reading on the x axis, 0 for independent var
 % Common Plotting flags
 
@@ -456,7 +456,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_optimize_fermion_odt';
+analyPrefix     = '_n38_rydberg_molecules';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,

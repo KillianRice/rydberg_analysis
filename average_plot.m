@@ -29,9 +29,11 @@ function funcOut = average_plot(analyVar, indivDataset, avgDataset)
             num=0;
             for basename = 1:analyVar.numBasenamesAtom
                 if scanIDs(id) == analyVar.meanListVar(basename)
-                    if xdata{basename}(i) == x{id}(i)
-                        num = num + 1;
-                        tempy(num) = ydata{basename}(i);
+                    for j = 1:indivDataset{basename}.CounterAtom
+                        if xdata{basename}(j) == x{id}(i)
+                            num = num + 1;
+                            tempy(num) = ydata{basename}(j);
+                        end
                     end
                 end
             end
