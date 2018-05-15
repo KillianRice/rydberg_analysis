@@ -57,7 +57,7 @@ end
 
 xData = unique_Freq;
 
-[amplitude_gaussian, center_gaussian, sigma_gaussian, offset_gaussian] = gaussian_fit2(xData, yData_Average, 1, -1);
+[amplitude_gaussian, center_gaussian, sigma_gaussian, offset_gaussian] = gaussian_fit2(xData, yData_Average, 1, 1);
 guassian_FWHM = 2*sigma_gaussian(1)*(2*log(2))^0.5;
 guassian_FWHM_error = 2*sigma_gaussian(2)*(2*log(2))^0.5;
 center_gaussian

@@ -21,6 +21,9 @@ initOffset = (data_y(1)+data_y(end))/2; %average of the first and last datapoint
 initCenter = sum(data_x.*(data_y))/sum(data_y);%expectation value of data_x, with PDF data_y 
 initSigma = sqrt(sum((data_x-initCenter).^2 .*(data_y)) / sum(data_y));% stnd = <x^2>-<x>^2 with PDF y(x)
 
+%initCenter = 2092;
+%initAmp = 7091;
+
 if offsetflag
     Fitting_Output = NonLinearModel.fit(data_x, data_y, GaussianFitModel,...
     [initAmp,initCenter,initSigma,initOffset],...
