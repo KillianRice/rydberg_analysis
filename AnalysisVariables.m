@@ -74,9 +74,11 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'breathing_mode',...                %27 fits cloud radius to a damped sine
                     'gaussian_loss_feature',...         %28
                     'density',...                       %29 Calculates cloud density given trap frequencies
-                    'triplet_lineshape',...                %30 Fits two symmetrically split gaussian peaks
+                    'triplet_lineshape',...             %30 Fits two symmetrically split gaussian peaks
+                    'split_fermion_rydberg_line',...    %31 fit the f=11/2 3S1 rydberg lineshape split by a magnetic field
+                    'split_fermion_rydberg_line_constrained',... %32 same fit as 31 but with certain parameters fixed.
                     };
-plugInVec = [21,30];
+plugInVec = [32];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -459,7 +461,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_measure_magnetic_field';
+analyPrefix     = '_rydberg_molecules_n30';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
