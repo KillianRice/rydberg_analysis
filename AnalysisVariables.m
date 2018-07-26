@@ -78,8 +78,9 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'split_fermion_rydberg_line',...    %31 fit the f=11/2 3S1 rydberg lineshape split by a magnetic field
                     'split_fermion_rydberg_line_constrained',... %32 same fit as 31 but with certain parameters fixed.
                     'data_vs_time',...                  %33 plot number, temp, ... vs timestamp
+                    'DAQ_voltages',...                  %34 plot DAQ voltages
                     };
-plugInVec = [33];
+plugInVec = [34];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
