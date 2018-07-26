@@ -58,11 +58,16 @@ end
 xData = unique_Freq;
 
 [amplitude_gaussian, center_gaussian, sigma_gaussian, offset_gaussian] = gaussian_fit2(xData, yData_Average, 1, 1);
+integral = trapz(xData,yData_Average-offset_gaussian(1));
+fitted_integral = amplitude_gaussian(1) * sigma_gaussian(1) * sqrt(2*pi);
+
 guassian_FWHM = 2*sigma_gaussian(1)*(2*log(2))^0.5;
 guassian_FWHM_error = 2*sigma_gaussian(2)*(2*log(2))^0.5;
 center_gaussian
 guassian_FWHM
 guassian_FWHM_error
+integral
+fitted_integral
 
 xDataGaussian = linspace(min(xData), max(xData), 1e3);
 
