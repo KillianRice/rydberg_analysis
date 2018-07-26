@@ -77,8 +77,9 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'triplet_lineshape',...             %30 Fits two symmetrically split gaussian peaks
                     'split_fermion_rydberg_line',...    %31 fit the f=11/2 3S1 rydberg lineshape split by a magnetic field
                     'split_fermion_rydberg_line_constrained',... %32 same fit as 31 but with certain parameters fixed.
+                    'data_vs_time',...                  %33 plot number, temp, ... vs timestamp
                     };
-plugInVec = [32];
+plugInVec = [33];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
