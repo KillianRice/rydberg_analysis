@@ -372,6 +372,7 @@ indivBatchAtomVar = {
     'WeightedBECPeakAtom' %         18  left constant
     'BECamplitudeParameterAtom' %   19  left constant
     'wavemeterAtom'             %   20  wavemeter reading
+    'timestampAtom'            %    21  timestamp of image (YYYY.MM.DD - HH:MM:SS)
     };
 indivBatchBackVar = {
     'fileBack'
@@ -394,6 +395,7 @@ indivBatchBackVar = {
     'WeightedBECPeakBack' %left constant
     'BECamplitudeParameterBack' %left constant
     'wavemeterBack'             % wavemeter reading
+    'timestampBack'            %    21  timestamp of image (YYYY.MM.DD - HH:MM:SS)
     };
         
 %% Choose windows to analyze
@@ -461,7 +463,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_rydberg_molecules_n30';
+analyPrefix     = '_rydberg_excitation_rates';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,

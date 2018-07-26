@@ -51,7 +51,7 @@ for basenameNum = 1:analyVar.numBasenamesAtom
     % print batch name
     disp(char(analyVar.basenamevectorAtom(basenameNum)));
     
-    batchLineFormat = '%q%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f';
+    batchLineFormat = '%q%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%{yyyy.MM.dd-HH:mm:ss}D';
     %batch line format reads as follows:
     %Scan name and image number \t independent parameter value \t a bunch
     %of old stuff up to "wavemeteroff" \t 3 beam vca 1 static voltage value
