@@ -43,7 +43,7 @@ function funcOut = DAQ_voltages(analyVar, indivDataset, avgDataset)
                 if ~isempty(indivDataset{j}.daq_voltages)
                     if time_axis == 1
                         myplot(indivDataset{j}.daq_voltages{1},...
-                            indivDataset{j}.daq_voltages{i+2},analyVar,j)
+                            indivDataset{j}.daq_voltages{i+2},analyVar,j);
                     else
                         myplot(indivDataset{j}.imagevcoAtom,indivDataset{j}{i+2},analyVar,j);
                     end
