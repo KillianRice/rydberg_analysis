@@ -79,10 +79,11 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'split_fermion_rydberg_line_constrained',... %32 same fit as 31 but with certain parameters fixed.
                     'data_vs_time',...                  %33 plot number, temp, ... vs timestamp
                     'DAQ_voltages',...                  %34 plot DAQ voltages
+                    'avg_num_and_temp',...              %35 plot histograms of average atom number and temp
                     };
-plugInVec = [34];
+plugInVec = [21,15,33,34,35];
 
-UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
+UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
 UseWavemeter = 0; % set to 1 to plot with wavemeter reading on the x axis, 0 for independent var
 % Common Plotting flags
