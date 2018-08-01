@@ -33,12 +33,12 @@ end
 % end
 
 %% Loop through each batch file listed in basenamevectorAtom
-parfor basenameNum = 1:analyVar.numBasenamesAtom
+for basenameNum = 1:analyVar.numBasenamesAtom
     % this will keep track of all the files analyzed in all the batches
     fprintf('\nCloud fitting batch file %g of %g\n',basenameNum,analyVar.numBasenamesAtom)
     
     % Process all the data files in this batch
-    for k = 1:indivDataset{basenameNum}.CounterAtom;
+    parfor k = 1:indivDataset{basenameNum}.CounterAtom;
 %% Retrieve OD image from file
 %%%%%%%-----------------------------------%%%%%%%%%%
         if exist([analyVar.analyOutDir char(indivDataset{basenameNum}.fileAtom(k)) analyVar.ODimageFilename],'file')

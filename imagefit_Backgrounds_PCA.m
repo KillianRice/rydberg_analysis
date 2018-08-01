@@ -51,7 +51,7 @@ if (exist('matlabpool') && matlabpool('size') == 0)
 end
 
 %% Loop through each batch file listed in analyVar.basenamevectorAtom
-parfor basenameNum = 1:analyVar.numBasenamesAtom
+for basenameNum = 1:analyVar.numBasenamesAtom
     % this will keep track of all the files analyzed in all the batches
     fprintf('\nBackground fitting batch file %g of %g\n',basenameNum,analyVar.numBasenamesAtom)
     
@@ -70,7 +70,7 @@ parfor basenameNum = 1:analyVar.numBasenamesAtom
 %% Loop through each image and find background state
 %%%%%%%-----------------------------------%%%%%%%%%%
     % this loop fits the background for all atom files in this dataset
-    for k = 1:indivDataset{basenameNum}.CounterAtom  
+    parfor k = 1:indivDataset{basenameNum}.CounterAtom  
         % take the inital conditions of the nth image as the projection onto the pcBasis
         InitialCondition = pcCoeffs(k,1:varLim);
         
