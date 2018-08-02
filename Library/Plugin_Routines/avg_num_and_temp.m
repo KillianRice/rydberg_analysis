@@ -14,30 +14,66 @@ function funcOut = avg_num_and_temp(analyVar, indivDataset, avgDataset)
     alltempx = [];
     alltempy = [];
     
+    scanIDs = analyVar.uniqScanList;
+    
     fields = {numfield, tempXfield, tempYfield};
     allvectors = {allnum, alltempx, alltempy};
     
-    for i = 1:analyVar.numBasenamesAtom
-        
-        for j = 1:length(fields)
-            
-            [m,catdim] = max(size(indivDataset{i}.(fields{j})));
-            
-            allvectors{j} = cat(catdim,allvectors{j},indivDataset{i}.(fields{j}));
-            
+    
+    if length(scanIDs) > 1
+        groupnums = cell(length(scanIDs),1);
+        grouptempX = cell(length(scanIDs),1);
+        grouptempY = cell(length(scanIDs),1);
+        groupvectors = {groupnums, grouptempY, grouptempY};
+        for id=1:length(scanIDs)
+            for i = 1:analyVar.numBasenamesAtom
+                if scanIDs(id) == analyVar.meanListVar(i)
+                    for j = 1:length(fields)
+                        [m,catdim] = max(size(indivDataset{i}.(fields{j})));
+                        groupvectors{j}{id} = cat(catdim,groupvectors{j}{id},...
+                            indivDataset{i}.(fields{j}));
+                    end
+                end
+            end
         end
         
-    end
-    
+        for i = 1:length(fields)
+            figure;
+            hold on;
+            for id = 1:length(scanIDs)
+                histogram(groupvectors{i}{id})
+            end
+            xlabel(fields{i});
+            ylabel('Occurances');
+            legend(num2str(analyVar.meanListVar))
 
+        end
+        
+    else
     
-    for i = 1:length(fields)
-        figure;
-        hold on;
-        hist(allvectors{i})
-        xlabel(fields{i});
-        ylabel('Occurances');
-        myAnnotation(fields{i}, mean(allvectors{i}), std(allvectors{i}));
+        for i = 1:analyVar.numBasenamesAtom
+
+            for j = 1:length(fields)
+
+                [m,catdim] = max(size(indivDataset{i}.(fields{j})));
+
+                allvectors{j} = cat(catdim,allvectors{j},indivDataset{i}.(fields{j}));
+
+            end
+
+        end
+
+
+
+        for i = 1:length(fields)
+            figure;
+            hold on;
+            histogram(allvectors{i})
+            xlabel(fields{i});
+            ylabel('Occurances');
+            myAnnotation(fields{i}, mean(allvectors{i}), std(allvectors{i}));
+        end
+        
     end
     
     funcOut.analyVar = analyVar;
