@@ -16,15 +16,15 @@ function funcOut = avg_num_and_temp(analyVar, indivDataset, avgDataset)
     
     scanIDs = analyVar.uniqScanList;
     
-    fields = {numfield, tempXfield, tempYfield};
-    allvectors = {allnum, alltempx, alltempy};
+    fields = {tempYfield, tempXfield, numfield};
+    allvectors = {alltempy, alltempx, allnum};
     
     
     if length(scanIDs) > 1
         groupnums = cell(length(scanIDs),1);
         grouptempX = cell(length(scanIDs),1);
         grouptempY = cell(length(scanIDs),1);
-        groupvectors = {groupnums, grouptempY, grouptempY};
+        groupvectors = {grouptempY, grouptempX, groupnums};
         for id=1:length(scanIDs)
             for i = 1:analyVar.numBasenamesAtom
                 if scanIDs(id) == analyVar.meanListVar(i)
