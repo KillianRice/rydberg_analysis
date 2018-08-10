@@ -1,5 +1,6 @@
 function funcOut = trap_effective_volume(analyVar, indivDataset, ~)
 
+
 for basename = 1:analyVar.numBasenamesAtom
     if analyVar.UseImages==1
         Tempx =indivDataset{basename}.atomTempX;
@@ -21,14 +22,11 @@ m = 87.62*1.673*10^(-27);       % avg mass of Sr
 num=double(mean(num));
 T=double(mean(T));
 
-
-
 %%%%%%%%%% defining the transition temp for the sample
 Tf = hbar*omega_r*(6*lambda*num)^(1/3)/kb;                      % Fermi temperature
 numstates = 10;                                                 % number of hyperfine ground states;  Sr87 has 10
 Tfunpol = hbar*omega_r*(6*lambda*num/numstates)^(1/3)/kb;       % Fermi temperature for the unpol Sample  
 Tc = hbar*num^(1/3)*(omega_r^2*omega_dimple)^(1/3)*0.94/kb;     % BEC transition temp
-
 
 
 %%%%%%%%% solving for fugacity of the thermal gas 
@@ -74,13 +72,16 @@ coldensityfermiunpol = @(y,z) integral(@(x) densityfermiunpol(x,y,z),xmini,xmaxi
         ndensityvector={coldensitybose,coldensityfermi,numstates.*coldensityfermiunpol,coldensityfermi-coldensitybose,...
         coldensityfermi-numstates.*coldensityfermiunpol,numstates.*coldensityfermiunpol-coldensitybose};
         titlevec={'bosons','fermions','unpolarised fermions','residual Fermi-bose','res. UnpolFermi-fermi','res unpolFermi-bose'};
+
         %%%  Plots 
         figure(basename)
         title(basename);
+
         for i =1:length(ndensityvector)
             subplot(2,3,i)
             imagesc(Y,Z,ndensityvector{i})
             title(titlevec{i});
+
             
             colorbar
         end
@@ -95,6 +96,7 @@ end
             disp('fugbose')
             disp(fug)
             disp(fugunpol)
+
 
 
 

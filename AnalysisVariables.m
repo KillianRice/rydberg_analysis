@@ -80,8 +80,10 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'data_vs_time',...                  %33 plot number, temp, ... vs timestamp
                     'DAQ_voltages',...                  %34 plot DAQ voltages
                     'avg_num_and_temp',...              %35 plot histograms of average atom number and temp
+                    'sfi_gaussian',...                  %36
+                    'trap_effective_volume',...         %37
                     };
-plugInVec = [21,15,33,34,35];
+plugInVec = [21,33,34,35,37];
 
 UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -466,7 +468,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_rydberg_excitation_rates';
+analyPrefix     = '_rydberg_excitation_rates_2uK';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
