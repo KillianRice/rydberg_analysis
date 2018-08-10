@@ -31,38 +31,43 @@ function funcOut = sfi_gaussian(analyVar, indivDataset, avgDataset)
         xlabel(xaxis_label);
         ylabel(yaxis_label);
         myAnnotation(coeffs{i});
-        legend(num2str(analyVar.timevectorAtom)(i));
+        legend(num2str(analyVar.timevectorAtom(i)));
         hold off
         
     end
     
-    [xdata,ydata,yerr] = get_averages(analyVar, indivDataset, avgDataset, indVarField, depVarField);
-    scanIDs = analyVar.uniqScanList;
+    if length(analyVar.timevectorAtom) > 1
     
-    for i = 1:length(scanIDs)
+        [xdata,ydata,yerr] = get_averages(analyVar, indivDataset, avgDataset, indVarField, depVarField);
+        scanIDs = analyVar.uniqScanList;
 
-         if size(xdata{i}) ~= size(ydata{i})
-            warning(['Dimensions of xdata, ydata not the same. ' ...
-                'Trying to fix, but may lead to unpredictable results.'])
-            ydata{i} = ydata{i}';
+        for i = 1:length(scanIDs)
+
+             if size(xdata{i}) ~= size(ydata{i})
+                warning(['Dimensions of xdata, ydata not the same. ' ...
+                    'Trying to fix, but may lead to unpredictable results.'])
+                ydata{i} = ydata{i}';
+            end
+            x0 = initial_guess(xdata{i},ydata{i});
+            % fit the data
+            avg_coeffs{i} = lsqcurvefit(form,x0,xdata{i},ydata{i},[],[],struct('Display','off'));
+
+            %plotting stuff
+            fitx = linspace(min(xdata{i}),max(xdata{i}),1000);
+            
+            figure
+            hold on
+            myerrorbar(xdata{i},ydata{i},yerr{i},analyVar,i);
+            myfitplot(fitx,form(avg_coeffs{i},fitx),analyVar,i);
+            xlabel(xaxis_label);
+            ylabel(yaxis_label);
+            myAnnotation(avg_coeffs{i});
+            legend(num2str(scanIDs(i)));
+            hold off
+
         end
-        x0 = initial_guess(xdata{i},ydata{i});
-        % fit the data
-        avg_coeffs{i} = lsqcurvefit(form,x0,xdata{i},ydata{i},[],[],struct('Display','off'));
-
-        %plotting stuff
-        fitx = linspace(min(xdata{i}),max(xdata{i}),1000);
-        
-        hold on
-        myerrorbar(xdata{i},ydata{i},yerr{i},analyVar,i);
-        myfitplot(fitx,form(coeffs{i},fitx),analyVar,i);
-        xlabel(xaxis_label);
-        ylabel(yaxis_label);
-        myAnnotation(coeffs{i});
-        legend(num2str(analyVar.timevectorAtom)(i));
-        hold off
-
     end
+    
     
     funcOut.analyVar = analyVar;
     funcOut.indivDataset = indivDataset;
@@ -91,7 +96,7 @@ function h = myplot(x,y,analyVar,i)
 end
 
 function h = myerrorbar(x,y,yerr,analyVar,i)
-    h = plot(x,y,yerr,...
+    h = errorbar(x,y,yerr,...
         'LineStyle','none',...
         'Marker', 'o',...
         'MarkerSize', analyVar.markerSize,...
