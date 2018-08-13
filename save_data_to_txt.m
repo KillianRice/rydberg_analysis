@@ -1,7 +1,7 @@
 function [ files ] = save_data_to_txt( analyVar, indivDataset, avgDataset )
 
     indVarField = 'imagevcoAtom';
-    depVarField = {'winTotNum','atomTempX','atomTempY','atomTemp','density'};
+    depVarField = {'sfiIntegral'};
     
     for j = 1:length(depVarField)
         
@@ -16,7 +16,7 @@ function [ files ] = save_data_to_txt( analyVar, indivDataset, avgDataset )
             end
 
 
-            outfile = fopen(strcat('./out/',analyVar.basenamevectorAtom{i},'_',depVarField{j},'.txt'),'w');
+            outfile = fopen(strcat('./out/',analyVar.dataDirName,analyVar.basenamevectorAtom{i},'_',depVarField{j},'.txt'),'w');
             fprintf(outfile, '%0.30e\t%0.30e\n', [xdata{i} ydata{i}]');
             fclose(outfile);
         end
