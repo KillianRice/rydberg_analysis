@@ -43,9 +43,9 @@ xmini=-40*10^(-6);
 xmaxi=40*10^(-6);
 
 %%%%%%%%%% Functions %%%%%%%%%%%%
-densityfermi = @(x,y,z) -(kb*m.*T).^(3/2)./((2*pi)^3/2*hbar^3).*polylog_BEC_fermi(-fug{basename}.*exp((-m*omega_r.^2.*(x.^2 + y.^2 + lambda.^2.*z.^2))./(2*kb.*T)));
-densityfermiunpol = @(x,y,z) -(kb*m.*T).^(3/2)./((2*pi).^3/2*hbar^3).*polylog_BEC_fermi(-fugunpol{basename}.*exp((-m*omega_r.^2.*(x.^2 + y.^2 + lambda.^2.*z.^2))./(2*kb.*T)));
-densitybose =  @(x,y,z) (kb*m*T)^(3/2)/((2*pi)^3/2*hbar^3).*polylog_BEC_fermi(fugbose{basename}.*exp((-m*omega_r^2.*(x.^2 + y.^2 + lambda^2.*z.^2))./(2*kb*T))); 
+densityfermi = @(x,y,z) -(kb*m.*T).^(3/2)./((2*pi)^(3/2)*hbar^3).*polylog_BEC_fermi(-fug{basename}.*exp((-m*omega_r.^2.*(x.^2 + y.^2 + lambda.^2.*z.^2))./(2*kb.*T)));
+densityfermiunpol = @(x,y,z) -(kb*m.*T).^(3/2)./((2*pi).^(3/2)*hbar^3).*polylog_BEC_fermi(-fugunpol{basename}.*exp((-m*omega_r.^2.*(x.^2 + y.^2 + lambda.^2.*z.^2))./(2*kb.*T)));
+densitybose =  @(x,y,z) (kb*m*T)^(3/2)/((2*pi)^(3/2)*hbar^3).*polylog_BEC_fermi(fugbose{basename}.*exp((-m*omega_r^2.*(x.^2 + y.^2 + lambda^2.*z.^2))./(2*kb*T))); 
 
 %%%%%%% column density from density
 coldensityfermi = @(y,z) integral(@(x) densityfermi(x,y,z),xmini,xmaxi,'ArrayValued',true); 
