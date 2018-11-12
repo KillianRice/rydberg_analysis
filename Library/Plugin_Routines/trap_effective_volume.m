@@ -93,7 +93,7 @@ end
             disp(vfermi)
             disp(vfermiunpol)
             disp('the fugacities are for bose, fermi and fermiunpol:')
-            disp('fugbose')
+            disp(fugbose)
             disp(fug)
             disp(fugunpol)
 
