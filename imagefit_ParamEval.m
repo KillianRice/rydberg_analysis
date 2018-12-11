@@ -178,6 +178,7 @@ if exist('funcOut')
     for index = 1:length(indivDataset)
         indivDataset{index} = funcOut.indivDataset{index};
     end
+    avgDataset = funcOut.avgDataset;
 end
 
 %% Wrap Up
