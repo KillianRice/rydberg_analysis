@@ -172,13 +172,16 @@ for lineFitIter = 1:length(analyVar.fitLineFunc)
     funcHand = str2func(analyVar.fitLineFunc{lineFitIter});
     % Call function with default arguments
     funcOut = funcHand(analyVar,indivDataset,avgDataset);
+    
+    analyVar = funcOut.analyVar;
+    indivDataset = funcOut.indivDataset;
+    avgDataset = funcOut.avgDataset;
 end
 
-if exist('funcOut')
+if exist('funcOut')    
     for index = 1:length(indivDataset)
         indivDataset{index} = funcOut.indivDataset{index};
     end
-    avgDataset = funcOut.avgDataset;
 end
 
 %% Wrap Up

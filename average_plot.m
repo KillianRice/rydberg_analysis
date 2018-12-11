@@ -59,6 +59,8 @@ function funcOut = average_plot(analyVar, indivDataset, avgDataset)
     end
     legend(num2str(scanIDs))
     hold off
+    
+    funcOut.analyVar = analyVar;
     funcOut.indivDataset = indivDataset;
     funcOut.avgDataset = avgDataset;
 end
