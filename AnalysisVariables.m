@@ -80,12 +80,15 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'data_vs_time',...                  %33 plot number, temp, ... vs timestamp
                     'DAQ_voltages',...                  %34 plot DAQ voltages
                     'avg_num_and_temp',...              %35 plot histograms of average atom number and temp
-                    'sfi_gaussian',...                  %36
-                    'trap_effective_volume',...         %37
+                    'MCS_Integrated_SFI_roi_Spectrum',...%36 select roi in for Integrated SFI and plot vs Independent variable
+                    'average_plot_sfi_roi'...           %37 plots averages of the two roi's selected
+                    'sfi_gaussian',...                  %38
+                    'trap_effective_volume',...         %39
+                   
                     };
-plugInVec = [37];
+plugInVec = [21,26];
 
-UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
+UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
 UseWavemeter = 0; % set to 1 to plot with wavemeter reading on the x axis, 0 for independent var
 % Common Plotting flags
@@ -468,7 +471,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_rydberg_excitation_rates';
+analyPrefix     = '_rydberg_spectroscopy';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
