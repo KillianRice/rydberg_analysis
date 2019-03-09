@@ -4,16 +4,16 @@ function funcOut = DAQ_voltages(analyVar, indivDataset, avgDataset)
     
     time_axis = 1; % if 1 plots against time axis, else plots against imagevcoatom
 
-    use_channels = [1 1 0 0 0 0 0 0]; % which channels to plot
+    use_channels = [1 1 1 0 0 0 0 0]; % which channels to plot
     
     channel_names = {'UV PD Mon (V)',...        % AI 0
                     'Red Spec Power Mon (V)',...% AI 1
-                    '',...                      % AI 2
+                    'DigiLock_DIO',...          % AI 2
                     '',...                      % AI 3
                     '',...                      % AI 4
                     '',...                      % AI 5
                     '',...                      % AI 6
-                    '',                         % AI 7
+                    '',...                      % AI 7
                     };
     
     daq_line_format = '%{yyyy.MM.dd-HH:mm:ss}D%f%f%f%f%f%f%f%f%f';
@@ -26,7 +26,7 @@ function funcOut = DAQ_voltages(analyVar, indivDataset, avgDataset)
         
         if exist(daq_file, 'file') == 2
             df = fopen(daq_file);
-            indivDataset{i}.daq_voltages = textscan(df, daq_line_format, 'headerLines',1);
+            indivDataset{i}.daq_voltages = textscan(df, daq_line_format, 'headerLines',2);
             legend_logic(i) = 1;
         else
             disp(strcat(analyVar.basenamevectorAtom{i}, ' daq file not found.'));
@@ -52,14 +52,14 @@ function funcOut = DAQ_voltages(analyVar, indivDataset, avgDataset)
             if time_axis == 1
                 xlabel('Timestamp');
             else
-                xlabel(analyVar.xDataLabel);
+                xlabel(analyVar.xDataLabel, 'Interpreter', 'none');
             end
             if ~strcmp(channel_names{i},'')
-                ylabel(channel_names{i})
+                ylabel(channel_names{i}, 'Interpreter', 'none')
             else
-                ylabel(strcat('DAQ Voltage Channel', num2str(i), ' (V)'));
+                ylabel(strcat('DAQ Voltage Channel', num2str(i), ' (V)'), 'Interpreter', 'none');
             end
-            legend(num2str(analyVar.timevectorAtom(legend_logic>0)));
+            legend(num2str(analyVar.timevectorAtom(legend_logic>0)), 'Interpreter', 'none');
         end
     end
 
