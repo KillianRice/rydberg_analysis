@@ -26,7 +26,7 @@ function funcOut = DAQ_voltages(analyVar, indivDataset, avgDataset)
         
         if exist(daq_file, 'file') == 2
             df = fopen(daq_file);
-            indivDataset{i}.daq_voltages = textscan(df, daq_line_format, 'headerLines',2);
+            indivDataset{i}.daq_voltages = textscan(df, daq_line_format, 'headerLines',1);
             legend_logic(i) = 1;
         else
             disp(strcat(analyVar.basenamevectorAtom{i}, ' daq file not found.'));
