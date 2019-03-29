@@ -1,4 +1,4 @@
-function funcOut = split_fermion_rydberg_line_constrained(analyVar, indivDataset, avgDataset)
+function funcOut = split_fermion_rydberg_line_pi_pi(analyVar, indivDataset, avgDataset)
     
     indVarField = 'imagevcoAtom'; % The Field of an IndivDataset that is to be plotted on the X axis
     depVarField = 'sfiIntegral'; % The field of an indivdataset that is to be plotted on the y axis
@@ -9,9 +9,8 @@ function funcOut = split_fermion_rydberg_line_constrained(analyVar, indivDataset
     [xdata, ydata] = getxy(indVarField, depVarField, analyVar, indivDataset, avgDataset);
     coeffs = cell(analyVar.numBasenamesAtom,1);   
     
-    fixed_params = [0.3055,1506.25];
-    form = @(coeffs, x) fitform(coeffs,x,fixed_params);
-    lb = zeros(13,1);
+    form = @(coeffs, x) fitform(coeffs,x);
+    lb = zeros(14,1);
     
     mF = -9/2:9/2;
     
@@ -41,22 +40,21 @@ function funcOut = split_fermion_rydberg_line_constrained(analyVar, indivDataset
         hold off
         subplot(2,1,2)
         hold on
-        bar(mF, coeffs{i}(4:end))
+        bar(mF, coeffs{i}(5:end))
         xlabel('m_F');
         ylabel('Amplitude');
         hold off
         
         
         disp(strcat('Fit coefficients - ',' ',analyVar.basenamevectorAtom{i}))
-        fprintf('Splitting fixed to %0.3e MHz.\n',fixed_params(1))
-        fprintf('Line Center - %0.3f\n',coeffs{i}(3))
-        fprintf('Sigma (MHz) - %0.3e\n',coeffs{i}(1))
-        fprintf('Offset - %0.3e\n',coeffs{i}(2))
+        fprintf('Line Center - %0.3f\n',coeffs{i}(1))
+        fprintf('Delta (MHz) - %0.3e\n',coeffs{i}(2))
+        fprintf('Sigma (MHz) - %0.3e\n',coeffs{i}(3))
+        fprintf('Offset - %0.3e\n',coeffs{i}(4))
         for j = 1:10
-            fprintf(strcat('Amplitude mF=',num2str(mF(j)*2), '/2 - %0.3e\n'),coeffs{i}(j+3))
+            fprintf(strcat('Amplitude mF=',num2str(mF(j)*2), '/2 - %0.3e\n'),coeffs{i}(j+4))
         end
-        fprintf('Signal Integral = %0.5e\n',abs(trapz(fitx,form(coeffs{i},fitx)-coeffs{i}(2))))
-        
+        fprintf('Signal Integral = %0.5e\n',trapz(fitx,form(coeffs{i},fitx)-coeffs{i}(4)))
         fprintf('\n\n\n\n')
         
         
@@ -95,22 +93,20 @@ function funcOut = split_fermion_rydberg_line_constrained(analyVar, indivDataset
         hold off
         subplot(2,1,2)
         hold on
-        bar(mF, avg_coeffs{i}(4:end))
+        bar(mF, avg_coeffs{i}(5:end))
         xlabel('m_F');
         ylabel('Amplitude');
         hold off
         
         disp(strcat('Fit coefficients - ',' ',num2str(scanIDs(i))))
-        fprintf('Splitting Fixed to %0.3e MHz.\n',fixed_params(1))
-        fprintf('Line Center %0.3f MHz\n',avg_coeffs{i}(3))
-        fprintf('Sigma (MHz) - %0.3e\n',avg_coeffs{i}(1))
-        fprintf('Offset - %0.3e\n',avg_coeffs{i}(2))
+        fprintf('Line Center - %0.3f\n',avg_coeffs{i}(1))
+        fprintf('Delta (MHz) - %0.3e\n',avg_coeffs{i}(2))
+        fprintf('Sigma (MHz) - %0.3e\n',avg_coeffs{i}(3))
+        fprintf('Offset - %0.3e\n',avg_coeffs{i}(4))
         for j = 1:10
-            fprintf(strcat('Amplitude mF=',num2str(mF(j)*2), '/2 - %0.3e\n'),avg_coeffs{i}(j+3))
+            fprintf(strcat('Amplitude mF=',num2str(mF(j)*2), '/2 - %0.3e\n'),avg_coeffs{i}(j+4))
         end
-        fprintf('Signal Integral = %0.5e\n',abs(trapz(fitx,form(avg_coeffs{i},fitx)-avg_coeffs{i}(2))))
-        
-        
+        fprintf('Signal Integral = %0.5e\n',trapz(fitx,form(avg_coeffs{i},fitx)-avg_coeffs{i}(4)))
         fprintf('\n\n\n\n')
         
     end
@@ -121,22 +117,19 @@ end
 
 function x0 = initial_guess(x,y)
 
-    %CGcoeffs = [0.00623013, 0.00953592, 0.00686586, 0.00127146, 0.00190718, 0.0240305,...
-          %0.0890019, 0.224285, 0.463446, 0.846154];
-          
-	CGcoeffs = [0.102, 0.112, 0.076, 0.032, 0.003, 0.003, 0.032, 0.076, 0.112, 0.102];
-      
+    CGcoeffs = [0.102, 0.112, 0.076, 0.032, 0.003, 0.003, 0.032, 0.076, 0.112, 0.102];
     CGcoeffs = CGcoeffs / max(CGcoeffs);
     
-    x0 = zeros(13,1);
-    x0(1) = 0.05;
-    x0(2) = 0;
-    x0(3) = min(x) + (max(x)-min(x))*0.4;
-    x0(4:end-1) = 0;
-    x0(end) = max(y);
+    x0 = zeros(14,1);
+    x0(1) = 1506.25;
+    x0(2) = 0.25;
+    x0(3) = 0.05;
+    x0(4) = 0;
+    x0(5:end) = max(y)*CGcoeffs; 
+
 end
 
-function y = fitform(coeffs, x, fixed_params)
+function y = fitform(coeffs, x)
     %%%%  F=11/2 3S1 split lineshape
     %%%% we are exciting with RH circular + linear light, so the
     %%%% accessible mF levels are -7/2 -> 11/2, we fix the center of the
@@ -147,12 +140,12 @@ function y = fitform(coeffs, x, fixed_params)
 
     mF = -9/2:9/2;
     y = zeros(size(x));
-    delta = fixed_params(1);
-    sigma = coeffs(1);
-    c = coeffs(2);
-    x0 = coeffs(3);
+    x0 = coeffs(1);
+    delta = coeffs(2);
+    sigma = coeffs(3);
+    c = coeffs(4);
     for i = 1:length(mF)
-        y = y + coeffs(i+3)*exp(-(x-x0-delta*mF(i)).^2/(2*sigma^2));
+        y = y + coeffs(i+4)*exp(-(x-x0-delta*mF(i)).^2/(2*sigma^2));
     end
     
     y = y+c;
