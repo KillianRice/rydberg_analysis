@@ -84,10 +84,11 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'average_plot_sfi_roi'...           %37 plots averages of the two roi's selected
                     'sfi_gaussian',...                  %38
                     'trap_effective_volume',...         %39
+                    'split_fermion_rydberg_line_pi_pi',...  %40
                    
                     };
-plugInVec = [36, 37, 35];
-%plugInVec = [21, 26, 38];
+%plugInVec = [21, 26, 34, 35, 38];
+plugInVec = [21, 26, 40];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -200,7 +201,7 @@ plotCounts_SR400 = 0;%photon counter
 
 
 % Plotting presentation
-TimeOrDetune  = 'Time'; % Valid options are 'Time', 'Detuning', 'Repetition', 'Voltage', 'Frequency'
+TimeOrDetune  = 'Frequency'; % Valid options are 'Time', 'Detuning', 'Repetition', 'Voltage', 'Frequency'
 
 titleFontSize = 18;
 axisfontsize  = 14;
@@ -478,7 +479,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_rydberg_spectroscopy';
+analyPrefix     = '_check_spin-polarization';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
