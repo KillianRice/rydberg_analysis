@@ -19,7 +19,6 @@ function funcOut = avg_num_and_temp(analyVar, indivDataset, avgDataset)
     fields = {tempYfield, tempXfield, numfield};
     allvectors = {alltempy, alltempx, allnum};
     
-    
     if length(scanIDs) > 1
         groupnums = cell(length(scanIDs),1);
         grouptempX = cell(length(scanIDs),1);
@@ -41,11 +40,11 @@ function funcOut = avg_num_and_temp(analyVar, indivDataset, avgDataset)
             figure;
             hold on;
             for id = 1:length(scanIDs)
-                histogram(groupvectors{i}{id})
+                histogram(groupvectors{i}{id});
             end
             xlabel(fields{i});
             ylabel('Occurances');
-            legend(num2str(analyVar.meanListVar))
+            legend(num2str(scanIDs));
 
         end
         
