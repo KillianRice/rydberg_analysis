@@ -11,7 +11,7 @@ function [files] = save_data_to_txt_ver3(analyVar, indivDataset, avgDataset)
     use_images = analyVar.UseImages;
     
     indVarField = {'imagevcoAtom'};
-    depVarField = {'sfiIntegral'};
+    depVarField = {'sfiIntegral', 'wavemeterAtom', 'wavemeterBack'};
     
     %{
     indivBatch_header = {
