@@ -77,9 +77,10 @@ for iterVar = 1:length(indVarCell)
     % Calculate output quantities
     % Outputs estimated value of each coefficient and the standard error (standard deviation) of
     % the estimate
-    loading_rate(iterVar,1:2)  = double(specFitModel.Coefficients('Loading Rate',{'Estimate', 'SE'}));
+    %loading_rate(iterVar,1:2)  = double(specFitModel.Coefficients('Loading Rate',{'Estimate', 'SE'}));
+    loading_rate(iterVar,1:2)  = table2array(specFitModel.Coefficients('Loading Rate',{'Estimate', 'SE'}));
     loading_rate(iterVar,3)=loading_rate(iterVar,2)/loading_rate(iterVar,1);
-    one_body_coeff(iterVar,1:2) = double(specFitModel.Coefficients('One Body Loss Coefficient',{'Estimate', 'SE'}));
+    one_body_coeff(iterVar,1:2) = table2array(specFitModel.Coefficients('One Body Loss Coefficient',{'Estimate', 'SE'}));
     one_body_coeff(iterVar,3)=one_body_coeff(iterVar,2)/one_body_coeff(iterVar,1);
     saturationNum(iterVar,1) = loading_rate(iterVar,1)*one_body_coeff(iterVar,1);
     saturationNum(iterVar,2) = saturationNum(iterVar,1)*sqrt((loading_rate(iterVar,2)/loading_rate(iterVar,1))^2+(one_body_coeff(iterVar,2)/one_body_coeff(iterVar,1))^2);
