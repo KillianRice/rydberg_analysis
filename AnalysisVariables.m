@@ -85,10 +85,11 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'sfi_gaussian',...                  %38
                     'trap_effective_volume',...         %39
                     'split_fermion_rydberg_line_pi_pi',...  %40
-                   
-                    };
+                    'SFI_fit_and_exctract',...          %41
+                    'average_plot_fitted_SFI',...       %42
+                        };
 %plugInVec = [21, 26, 34, 35, 38];
-plugInVec = [21, 26, 40];
+plugInVec = [36, 37, 41,42];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -103,10 +104,10 @@ end
 % EXPERIMENTAL OPTIONS AND SETTINGS
 %%-----------------------------------------------------------------------%%
 %%%% MCS ROI select options - selects the roi to perform SFI integral upon
-roi1_minimum = 110;
-roi1_maximum = 150;
-roi2_minimum = 151;
-roi2_maximum = 200;
+roi1_minimum = 97;
+roi1_maximum = 120;
+roi2_minimum = 85;
+roi2_maximum = 97;
 
 %%%% Atom cloud properties
 sampleType     = 'Thermal';  % Options are Thermal, BEC, or Lattice
@@ -479,7 +480,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_check_spin-polarization';
+analyPrefix     = '_mmwave_rabiosc';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
