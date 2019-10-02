@@ -87,12 +87,13 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'split_fermion_rydberg_line_pi_pi',...  %40
                     'SFI_fit_and_exctract',...          %41
                     'average_plot_fitted_SFI',...       %42
+                    'Fit_Template', ...                 %43 
                         };
 %plugInVec = [21, 26, 34, 35, 38];
-plugInVec = [36, 37, 41,42];
+plugInVec = [43,25];
 
-UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
-UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
+UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
+UseMCS = 0; % set to 1 to use mcs data, set to 0 to ignore mcs data
 UseWavemeter = 0; % set to 1 to plot with wavemeter reading on the x axis, 0 for independent var
 % Common Plotting flags
 
@@ -480,7 +481,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_mmwave_rabiosc';
+analyPrefix     = '_BEC_trap_frequencies';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
