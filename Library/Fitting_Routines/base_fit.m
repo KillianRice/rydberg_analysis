@@ -5,7 +5,7 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
         'DataPlotFunction', @defaultDataPlot,...
         'AvgDataPlotFunction', @defaultAvgDataPlot,...
         'FitLinePlotFunction', @defaultFitLinePlot,...
-        'AnnotateFunction', @defautAnnotate,...
+        'AnnotateFunction', @defaultAnnotate,...
         'IndivFitPlotFunction', @defaultIndivFitPlot,...
         'PlotIndivFits' , true,...
         'PlotAvgFits', true,...
@@ -13,7 +13,9 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
         'YAxisLabel', depVarField,...
         'FitLB', [],...
         'FitUB', [],...
-        'FitOptions', struct('Display','off') );
+        'FitOptions', struct('Display','off'),...
+        'PlotInitialGuess', false, ...
+        'InitialGuessPlotFunction', @defaultInitialGuessPlot);
     
     if nargin > 7
         opts = fieldnames(useroptions);
@@ -26,9 +28,11 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
     myAvgDataPlot = options.('AvgDataPlotFunction');
     myFitLinePlot = options.('FitLinePlotFunction');
     myAnnotate = options.('AnnotateFunction');
+    myInitialPlot = options.('InitialGuessPlotFunction');
     
     plotIndivFits = options.PlotIndivFits;
     plotAvgFits = options.PlotAvgFits;
+    plotInitialGuess = options.PlotInitialGuess;
 
     fitLB = options.FitLB;
     fitUB = options.FitUB;
@@ -59,8 +63,14 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
             
             figure
             hold on
+                if plotInitialGuess
+                    defaultInitialGuessPlot(fitx, form(initialguess, fitx), i, analyVar);
+                end
                 myDataPlot(xdata{i},ydata{i},i,analyVar);
                 myFitLinePlot(fitx, form(coeffs{i},fitx),i,analyVar);
+                %myAnnotate(coeffs)
+                disp(i)
+                disp(coeffs{i})
             hold off
         end
     end
@@ -88,6 +98,9 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
             
             figure
             hold on
+                if plotInitialGuess
+                    defaultInitialGuessPlot(fitx, form(initialguess, fitx), i, analyVar);
+                end
                 myAvgDataPlot(xavg{i},yavg{i},yerr{i},i,analyVar);
                 myFitLinePlot(fitx, form(avg_coeffs{i},fitx),i,analyVar);
             hold off
@@ -105,7 +118,7 @@ function h = defaultDataPlot(x,y,i,analyVar)
     'Marker', 'o',...
     'MarkerSize', analyVar.markerSize,...
     'MarkerFaceColor', analyVar.COLORS(i,:),...
-    'MarkerEdgeColor', 'none',...
+    'MarkerEdgeColor', 'k',...
     'Color', analyVar.COLORS(i,:));
 end
 
@@ -115,7 +128,7 @@ function h = defaultAvgDataPlot(x,y,yerr,i,analyVar)
         'Marker', 'o',...
         'MarkerSize', analyVar.markerSize,...
         'MarkerFaceColor', analyVar.COLORS(i,:),...
-        'MarkerEdgeColor', 'none',...
+        'MarkerEdgeColor', 'k',...
         'Color', analyVar.COLORS(i,:));
 end
 
@@ -127,7 +140,18 @@ function h = defaultFitLinePlot(x,y,i,analyVar)
         'Color', analyVar.COLORS(i,:));
 end
 
-function an = defaultAnnotate()
+function an = defaultAnnotate(coeffs)
+    dim = [0.2, 0.2, 0.3, 0.3];
+    str = '';
+    for i = 1:numel(coeffs)
+        str = strcat(str, fprintf('0.2%\n',coeffs(i)));
+    end
+    an = annotation('textbox', dim, 'String', str, 'FitBoxToText', 'on');
+end
 
+function h = defaultInitialGuessPlot(x,y,i,analyVar)
+    h = plot(x,y,...
+    'LineStyle','--',...
+    'Color', analyVar.COLORS(i+2,:));
 end
 

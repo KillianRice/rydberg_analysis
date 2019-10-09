@@ -88,9 +88,11 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'SFI_fit_and_exctract',...          %41
                     'average_plot_fitted_SFI',...       %42
                     'Fit_Template', ...                 %43 
+                    'beating_horizontal_trap_frequencies', ... %44
+                    'vertical_trap_frequency', ...      %45
                         };
 %plugInVec = [21, 26, 34, 35, 38];
-plugInVec = [43,25];
+plugInVec = [45];
 
 UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 0; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -189,7 +191,7 @@ lsqLinBnd       = {-Inf Inf}; % Linear background terms bound, all allowed to ra
 % Flag to Load Image Data
 
 SavePlotData  = 1; % Boolean to allow aggregation of variables from plotting into output structure
-plotFitEval   = 0; % Boolean to display plots showing the fit, cloud evolution, and residuals
+plotFitEval   = 1; % Boolean to display plots showing the fit, cloud evolution, and residuals
 plotInstParam = 1; % Boolean to extract and display 1st order parameters such as temperature, size, and number
 plotMeanParam = 1; % Boolean to average instantaneous parameters across multiple scans
 plotFitLine   = 1; % Boolean to extract higher order parameters by fitting instantaneous parameters
@@ -481,7 +483,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_BEC_trap_frequencies';
+analyPrefix     = '_BEC_in_sheet_plus_dimple';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,

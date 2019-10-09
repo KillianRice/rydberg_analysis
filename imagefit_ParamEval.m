@@ -91,6 +91,8 @@ if analyVar.UseImages
 
     % Cloud Size - X & Y saved to indivDataset
     indivDataset = param_ext_CloudRadius(analyVar,indivDataset);
+    % CLoud Center Pos -X and Y to indivDataset
+    indivDataset = param_ext_Cloudcenter(analyVar,indivDataset);
     % Plotting radius of each batch
     if analyVar.plotSize; create_plot_CloudRadius(analyVar,indivDataset); end
 
