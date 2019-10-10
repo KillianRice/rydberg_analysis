@@ -15,7 +15,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
         'FitUB', [],...
         'FitOptions', struct('Display','off'),...
         'PlotInitialGuess', false, ...
-        'InitialGuessPlotFunction', @defaultInitialGuessPlot);
+        'InitialGuessPlotFunction', @defaultInitialGuessPlot,...
+        'PlotAll', false);
     
     if nargin > 7
         opts = fieldnames(useroptions);
@@ -33,10 +34,14 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
     plotIndivFits = options.PlotIndivFits;
     plotAvgFits = options.PlotAvgFits;
     plotInitialGuess = options.PlotInitialGuess;
+    plotAll = options.PlotAll;
 
     fitLB = options.FitLB;
     fitUB = options.FitUB;
     fitOptions = options.FitOptions;
+    
+    xlabeltext = options.XAxisLabel;
+    ylabeltext = options.YAxisLabel;
     
     %%%%% do the fitting for each dataset %%%%%
     
@@ -68,11 +73,28 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 end
                 myDataPlot(xdata{i},ydata{i},i,analyVar);
                 myFitLinePlot(fitx, form(coeffs{i},fitx),i,analyVar);
-                %myAnnotate(coeffs)
+                myAnnotate(coeffs{i})
                 disp(i)
                 disp(coeffs{i})
+                xlabel(xlabeltext);
+                ylabel(ylabeltext);
+                legend(num2str(analyVar.timevectorAtom(i)));
             hold off
         end
+        
+        if plotAll
+            figure
+            hold on
+            for i = 1:analyVar.numBasenamesAtom
+                myDataPlot(xdata{i},ydata{i},i,analyVar);
+                %myFitLinePlot(fitx, form(coeffs{i},fitx),i,analyVar);
+                xlabel(xlabeltext);
+                ylabel(ylabeltext);
+            end
+            legend(num2str(analyVar.timevectorAtom));
+            hold off
+        end
+        
     end
     
     if length(analyVar.timevectorAtom) > 1 && plotAvgFits
@@ -103,6 +125,10 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 end
                 myAvgDataPlot(xavg{i},yavg{i},yerr{i},i,analyVar);
                 myFitLinePlot(fitx, form(avg_coeffs{i},fitx),i,analyVar);
+                myAnnotate(avg_coeffs{i})
+                xlabel(xlabeltext);
+                ylabel(ylabeltext);
+                legend(num2str(scanIDs(i)));
             hold off
             
             

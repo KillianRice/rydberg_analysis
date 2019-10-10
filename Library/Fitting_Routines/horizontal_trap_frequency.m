@@ -1,7 +1,7 @@
-function funcOut = vertical_trap_frequency(analyVar, indivDataset, avgDataset)
+function funcOut = horizontal_trap_frequency(analyVar, indivDataset, avgDataset)
     
     %% Fit_Template - Joe Whalen 2019.10.02
-    % Fit the vertical trap oscillation frequency using the dipole
+    % Fit the horizontal trap oscillation frequency using the dipole
     % (sloshing) mode.
     % Form: A * sin(2pi * f * t + phi) * exp(-Gamma * t) + c
     % coeffs(1): Amplitude
@@ -14,7 +14,7 @@ function funcOut = vertical_trap_frequency(analyVar, indivDataset, avgDataset)
     form = @(coeffs, x) coeffs(1) * sin(2*pi*coeffs(2)* x / 1000 + coeffs(3)) .* exp(-coeffs(4)*x / 1000) + coeffs(5); % your fit function here 
     
     indVarField = 'imagevcoAtom'; % independent variable
-    depVarField = 'cntrY'; % dependent variable
+    depVarField = 'cntrX'; % dependent variable
     
     %% initial guess code
     % fill in this function to estimate the values of the fit parameters,
@@ -57,7 +57,8 @@ function funcOut = vertical_trap_frequency(analyVar, indivDataset, avgDataset)
                         'DataPlotFunction', @myDataPlot,...
                         'AnnotateFunction', @myAnnotate,...
                         'XAxisLabel' , 'Time (ms)',...
-                        'YAxisLabel', 'Vertical Displacement (px)');
+                        'YAxisLabel', 'Horizontal Displacement (px)',...
+                        'PlotAll', 'true');
     
     base_fit(analyVar, indivDataset, avgDataset, form, indVarField, depVarField, @x0, options)
 
