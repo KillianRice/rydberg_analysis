@@ -91,9 +91,10 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'beating_horizontal_trap_frequencies', ... %44
                     'vertical_trap_frequency', ...      %45
                     'horizontal_trap_frequency', ...    %46
+                    'bec_rydberg_lifetime',...          %47
                         };
 %plugInVec = [21, 26, 34, 35, 38];
-plugInVec = [21,26,38,34];
+plugInVec = [47];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -114,7 +115,7 @@ roi2_minimum = 85;
 roi2_maximum = 97;
 
 %%%% Atom cloud properties
-sampleType     = 'Thermal';  % Options are Thermal, BEC, or Lattice
+sampleType     = 'BEC';  % Options are Thermal, BEC, or Lattice
 isotope        = 84; % Isotope mass used to select applicable models for fitting. Options are 84, 86, or 88 (87 not currently supported)
 detuning       = 0;  % s^-1, image beam detuning (as of 7/1/15)
 pureSample     = 1;  % Flags whether BEC samples have a thermal fraction present or not (ignored for Thermal and Lattice samples)
@@ -484,7 +485,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_rydberg_bec_spectra';
+analyPrefix     = '_BEC_rydberg_lifetimes';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,

@@ -16,7 +16,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
         'FitOptions', struct('Display','off'),...
         'PlotInitialGuess', false, ...
         'InitialGuessPlotFunction', @defaultInitialGuessPlot,...
-        'PlotAll', false);
+        'PlotAll', false,...
+        'PlotAllAvgs', false);
     
     if nargin > 7
         opts = fieldnames(useroptions);
@@ -35,6 +36,7 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
     plotAvgFits = options.PlotAvgFits;
     plotInitialGuess = options.PlotInitialGuess;
     plotAll = options.PlotAll;
+    plotAllAvgs = options.PlotAllAvgs;
 
     fitLB = options.FitLB;
     fitUB = options.FitUB;
@@ -105,10 +107,10 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
         
         for i = 1:length(scanIDs)
             
-            if size(xdata{i}) ~= size(ydata{i})
+            if size(xavg{i}) ~= size(yavg{i})
                 warning(['Dimensions of xdata, ydata not the same. ' ...
                     'Trying to fix, but may lead to unpredictable results.'])
-                ydata{i} = ydata{i}';
+                yavg{i} = yavg{i}';
             end
             
             % fit the data
@@ -132,6 +134,20 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
             hold off
             
             
+        end
+        
+        if plotAllAvgs
+            figure
+            hold on
+            for i = 1:length(scanIDs)
+                myAvgDataPlot(xavg{i},yavg{i},yerr{i},i,analyVar);
+                myFitLinePlot(fitx, form(avg_coeffs{i},fitx),i,analyVar);
+                xlabel(xlabeltext);
+                ylabel(ylabeltext);
+                legend(num2str(scanIDs(i)));
+            end
+            legend(num2str(analyVar.timevectorAtom));
+            hold off
         end
         
     end
