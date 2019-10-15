@@ -191,7 +191,7 @@ end
 
 function an = defaultAnnotate(coeffs, err, coeffNames, coeffUnits)
     
-    dim = [0.2, 0.2, 0.3, 0.3];
+    dim = [.7 .5 .3 .3];
     
     if isempty(coeffNames)
         for i = 1:numel(coeffs)

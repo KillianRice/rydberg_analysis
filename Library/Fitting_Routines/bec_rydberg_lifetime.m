@@ -56,7 +56,10 @@ function funcOut = bec_rydberg_lifetime(analyVar, indivDataset, avgDataset)
                         'FitLB', [0,0,0,0],...
                         'PlotAll', true,...
                         'PlotIndivFits',false,...
-                        'PlotAllAvgs', true);
+                        'PlotAllAvgs', true,...
+                        'CoeffNames', {{'N_0','\Gamma_{AI}','\Gamma_L','\tau_R'}},...
+                        'CoeffUnits', {{'','\mus^{-1}','\mus^{-1}','\mus'}},...
+                        'AnnotateFunction', @myAnnotate);
     
     base_fit(analyVar, indivDataset, avgDataset, form, indVarField, depVarField, @x0, options)
 
@@ -66,26 +69,39 @@ function funcOut = bec_rydberg_lifetime(analyVar, indivDataset, avgDataset)
 
 end
 
-function an = myAnnotate(coeffs)
+function an = myAnnotate(coeffs, err, coeffNames, coeffUnits)
     
-    function uncstr = uncfmt(num,unc)
-        digits_of_precision = floor(log10(num))-floor(log10(unc));
-        num_fmt = strcat('%.',num2str(digits_of_precision),'f');
-        numstr = num2str(num,num_fmt);
-        
-        expstr = num2str(floor(log10(num)),'%+.0f');
-        
-    end
-    dim = [.7 .5 .3 .3];
-    fmt = '%0.2e';
-    str_n0 = strcat('N_0: ',num2str(coeffs(1),'%.1f'));
-    str_ai = strcat('\Gamma_{AI}: ',num2str(coeffs(2)*1e-6,fmt),' \mus^{-1}');
-    str_L = strcat('\Gamma_{L}: ',num2str(coeffs(3)*1e-6,fmt),' \mus^{-1}');
-    str_tau = strcat('\tau_{R}: ',num2str(1/coeffs(4)*1e6,'%.0f'),' \mus');
-    str = [str_n0, newline, str_ai,...
-        newline, str_L,...
-        newline, str_tau];
-    an = annotation('textbox',dim,'String',str,'FitBoxToText','on','BackgroundColor','white');
-end
+    coeffs(2:3) = coeffs(2:3) * 1e-6;
+    err(2:3) = err(2:3) * 1e-6;
+    coeffs(4) = 1/coeffs(4)*1e6;
+    err(4) = abs(0.5e6*(1/(coeffs(4)+err(4))-1/(coeffs(4)-err(4))));
 
+    dim = [.25 .6 .3 .3];
+    
+    if isempty(coeffNames)
+        for i = 1:numel(coeffs)
+            coeffNames{i} = ['Coeff ', num2str(i)];
+        end
+    end
+    
+    if isempty(coeffUnits)
+        for i = 1:numel(coeffs)
+            coeffUnits{i} = '';
+        end
+    end
+    
+    strs = cell(numel(coeffs),1);
+    for i = 1:numel(coeffs)
+        if i < numel(coeffs)
+            strs{i} = [coeffNames{i}, ': ', unc_string(coeffs(i),err(i)),...
+                ' ', coeffUnits{i}, newline];
+        else
+            strs{i} = [coeffNames{i}, ': ', unc_string(coeffs(i),err(i)),...
+                ' ', coeffUnits{i}];
+        end
+    end
+    
+    an = annotation('textbox', dim, 'String', strjoin(strs),...
+        'FitBoxToText', 'on', 'BackgroundColor', 'white');
+end
 
