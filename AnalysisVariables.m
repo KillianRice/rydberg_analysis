@@ -95,7 +95,7 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'sinc_squared_lineshape',...        %48
                         };
 %plugInVec = [21, 26, 34, 35, 38];
-plugInVec = [47];
+plugInVec = [21];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
