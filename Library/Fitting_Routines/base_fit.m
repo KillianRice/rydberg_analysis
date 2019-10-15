@@ -17,9 +17,9 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
         'PlotInitialGuess', false, ...
         'InitialGuessPlotFunction', @defaultInitialGuessPlot,...
         'PlotAll', false,...
-        'PlotAllAvgs', false,...
-        'CoeffNames', {},...
-        'CoeffsToDisplay', []);
+        'PlotAllAvgs', false, ...
+        'CoeffNames', {{}},...
+        'CoeffUnits', {{}});
     
     if nargin > 7
         opts = fieldnames(useroptions);
@@ -48,6 +48,7 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
     ylabeltext = options.YAxisLabel;
     
     coeffNames = options.CoeffNames;
+    coeffUnits = options.CoeffUnits;
     
     %%%%% do the fitting for each dataset %%%%%
     
@@ -133,7 +134,7 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 end
                 myAvgDataPlot(xavg{i},yavg{i},yerr{i},i,analyVar);
                 myFitLinePlot(fitx, form(avg_coeffs{i},fitx),i,analyVar);
-                myAnnotate(avg_coeffs{i})
+                myAnnotate(avg_coeffs{i}, avg_err{i}, coeffNames, coeffUnits)
                 xlabel(xlabeltext);
                 ylabel(ylabeltext);
                 legend(num2str(scanIDs(i)));
@@ -192,13 +193,13 @@ function an = defaultAnnotate(coeffs, err, coeffNames, coeffUnits)
     
     dim = [0.2, 0.2, 0.3, 0.3];
     
-    if coeffNames == {}
+    if isempty(coeffNames)
         for i = 1:numel(coeffs)
             coeffNames{i} = ['Coeff ', num2str(i)];
         end
     end
     
-    if coeffUnits == {}
+    if isempty(coeffUnits)
         for i = 1:numel(coeffs)
             coeffUnits{i} = '';
         end
@@ -207,15 +208,15 @@ function an = defaultAnnotate(coeffs, err, coeffNames, coeffUnits)
     strs = cell(numel(coeffs),1);
     for i = 1:numel(coeffs)
         if i < numel(coeffs)
-            strs{i} = [coeffNames{i}, ': ', unc_string(coeffs{i},err{i}),...
+            strs{i} = [coeffNames{i}, ': ', unc_string(coeffs(i),err(i)),...
                 ' ', coeffUnits{i}, newline];
         else
-            strs{i} = [coeffNames{i}, ': ', unc_string(coeffs{i},err{i}),...
+            strs{i} = [coeffNames{i}, ': ', unc_string(coeffs(i),err(i)),...
                 ' ', coeffUnits{i}];
         end
     end
     
-    an = annotation('textbox', dim, 'String', strcat(strs{:}),...
+    an = annotation('textbox', dim, 'String', strjoin(strs),...
         'FitBoxToText', 'on', 'BackgroundColor', 'white');
 end
 
