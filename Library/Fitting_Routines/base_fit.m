@@ -17,7 +17,9 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
         'PlotInitialGuess', false, ...
         'InitialGuessPlotFunction', @defaultInitialGuessPlot,...
         'PlotAll', false,...
-        'PlotAllAvgs', false);
+        'PlotAllAvgs', false, ...
+        'CoeffNames', {{}},...
+        'CoeffUnits', {{}});
     
     if nargin > 7
         opts = fieldnames(useroptions);
@@ -44,6 +46,9 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
     
     xlabeltext = options.XAxisLabel;
     ylabeltext = options.YAxisLabel;
+    
+    coeffNames = options.CoeffNames;
+    coeffUnits = options.CoeffUnits;
     
     %%%%% do the fitting for each dataset %%%%%
     
@@ -104,6 +109,7 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
         [xavg, yavg, yerr] = get_averages(analyVar, indivDataset, avgDataset, indVarField, depVarField);
         scanIDs = analyVar.uniqScanList;
         avg_coeffs = cell(length(scanIDs),1);
+        avg_err = cell(length(scanIDs),1);
         
         for i = 1:length(scanIDs)
             
@@ -115,8 +121,9 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
             
             % fit the data
             initialguess = x0(xavg{i}, yavg{i});
-            avg_coeffs{i} = lsqcurvefit(form,initialguess,xavg{i},yavg{i},fitLB,fitUB,fitOptions);
-            
+            [avg_coeffs{i},~,residual,~,~,~,J] = lsqcurvefit(form,initialguess,xavg{i},yavg{i},fitLB,fitUB,fitOptions);
+            conf = nlparci(avg_coeffs{i},residual,'jacobian',J); % returns 95% CI bounds
+            avg_err{i} = (conf(:,2) - conf(:,1)) / 4; % computes 1 sigma uncertainty from 95% CI
             % plot the data
             fitx = linspace(min(xavg{i}),max(xavg{i}),1000);
             
@@ -127,7 +134,7 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 end
                 myAvgDataPlot(xavg{i},yavg{i},yerr{i},i,analyVar);
                 myFitLinePlot(fitx, form(avg_coeffs{i},fitx),i,analyVar);
-                myAnnotate(avg_coeffs{i})
+                myAnnotate(avg_coeffs{i}, avg_err{i}, coeffNames, coeffUnits)
                 xlabel(xlabeltext);
                 ylabel(ylabeltext);
                 legend(num2str(scanIDs(i)));
@@ -182,13 +189,35 @@ function h = defaultFitLinePlot(x,y,i,analyVar)
         'Color', analyVar.COLORS(i,:));
 end
 
-function an = defaultAnnotate(coeffs)
-    dim = [0.2, 0.2, 0.3, 0.3];
-    str = '';
-    for i = 1:numel(coeffs)
-        str = strcat(str, fprintf('0.2%\n',coeffs(i)));
+function an = defaultAnnotate(coeffs, err, coeffNames, coeffUnits)
+    
+    dim = [.7 .5 .3 .3];
+    
+    if isempty(coeffNames)
+        for i = 1:numel(coeffs)
+            coeffNames{i} = ['Coeff ', num2str(i)];
+        end
     end
-    an = annotation('textbox', dim, 'String', str, 'FitBoxToText', 'on');
+    
+    if isempty(coeffUnits)
+        for i = 1:numel(coeffs)
+            coeffUnits{i} = '';
+        end
+    end
+    
+    strs = cell(numel(coeffs),1);
+    for i = 1:numel(coeffs)
+        if i < numel(coeffs)
+            strs{i} = [coeffNames{i}, ': ', unc_string(coeffs(i),err(i)),...
+                ' ', coeffUnits{i}, newline];
+        else
+            strs{i} = [coeffNames{i}, ': ', unc_string(coeffs(i),err(i)),...
+                ' ', coeffUnits{i}];
+        end
+    end
+    
+    an = annotation('textbox', dim, 'String', strjoin(strs),...
+        'FitBoxToText', 'on', 'BackgroundColor', 'white');
 end
 
 function h = defaultInitialGuessPlot(x,y,i,analyVar)
