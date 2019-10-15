@@ -92,6 +92,7 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'vertical_trap_frequency', ...      %45
                     'horizontal_trap_frequency', ...    %46
                     'bec_rydberg_lifetime',...          %47
+                    'sinc_squared_lineshape',...        %48
                         };
 %plugInVec = [21, 26, 34, 35, 38];
 plugInVec = [47];

@@ -1,4 +1,4 @@
-function funcOut = bec_rydberg_lifetime(analyVar, indivDataset, avgDataset)
+function funcOut = sinc_squared_lineshape(analyVar, indivDataset, avgDataset)
     
     %% Fit_Template - Joe Whalen 2019.10.02
     % This function calls the base_fit script that does all of the fitting
@@ -13,22 +13,24 @@ function funcOut = bec_rydberg_lifetime(analyVar, indivDataset, avgDataset)
     % field in indivDataset. Typically the indVarField is imagevcoAtom, the
     % variable that was scanned during the experiment.
     
-    form = @(coeffs, x) coeffs(1) * ...
-        (exp(-(coeffs(2)+coeffs(3)+coeffs(4))*x) + ...
-        coeffs(3)/(coeffs(2)+coeffs(3)) * exp(-coeffs(4)*x).*(1-exp(-(coeffs(2)+coeffs(3))*x)));
+    form = @(coeffs, x) % your fit function here 
     
     indVarField = 'imagevcoAtom'; % independent variable
-    depVarField = 'sfiIntegral'; % dependent variable
+    depVarField = 'cntrX'; % dependent variable
     
     %% initial guess code
     % fill in this function to estimate the values of the fit parameters,
     % alternatively you can just have thist function return a constant
     % vector if you don't have a simple way of obtaining an initial guess
     function initialguess = x0(xdata, ydata)
-        initialguess(1) = max(ydata);
-        initialguess(2) = 1/(0.1 * (max(xdata)-min(xdata)));
-        initialguess(3) = 1/(0.1 * (max(xdata)-min(xdata)));
-        initialguess(4) = 1/(max(xdata)-min(xdata));
+        % code
+        % that
+        % guesses
+        % initial
+        % params
+        % can also return a constant vector with length equal to the number
+        % of parameters in the fit function
+        initialguess = [];
     end
 
 
@@ -51,13 +53,7 @@ function funcOut = bec_rydberg_lifetime(analyVar, indivDataset, avgDataset)
         %'FitOptions', struct('Display','off') );
     %%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    options = struct( 'XAxisLabel', 'Time (s)', ...
-                        'YAxisLabel', 'MCP Counts',...
-                        'AnnotateFunction', @myAnnotate,...
-                        'FitLB', [0,0,0,0],...
-                        'PlotAll', true,...
-                        'PlotIndivFits',false,...
-                        'PlotAllAvgs', true);
+    options = struct();
     
     base_fit(analyVar, indivDataset, avgDataset, form, indVarField, depVarField, @x0, options)
 
@@ -66,27 +62,4 @@ function funcOut = bec_rydberg_lifetime(analyVar, indivDataset, avgDataset)
     funcOut.avgDataset = avgDataset;
 
 end
-
-function an = myAnnotate(coeffs)
-    
-    function uncstr = uncfmt(num,unc)
-        digits_of_precision = floor(log10(num))-floor(log10(unc));
-        num_fmt = strcat('%.',num2str(digits_of_precision),'f');
-        numstr = num2str(num,num_fmt);
-        
-        expstr = num2str(floor(log10(num)),'%+.0f');
-        
-    end
-    dim = [.7 .5 .3 .3];
-    fmt = '%0.2e';
-    str_n0 = strcat('N_0: ',num2str(coeffs(1),'%.1f'));
-    str_ai = strcat('\Gamma_{AI}: ',num2str(coeffs(2)*1e-6,fmt),' \mus^{-1}');
-    str_L = strcat('\Gamma_{L}: ',num2str(coeffs(3)*1e-6,fmt),' \mus^{-1}');
-    str_tau = strcat('\tau_{R}: ',num2str(1/coeffs(4)*1e6,'%.0f'),' \mus');
-    str = [str_n0, newline, str_ai,...
-        newline, str_L,...
-        newline, str_tau];
-    an = annotation('textbox',dim,'String',str,'FitBoxToText','on','BackgroundColor','white');
-end
-
 
