@@ -93,6 +93,7 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'horizontal_trap_frequency', ...    %46
                     'bec_rydberg_lifetime',...          %47
                     'sinc_squared_lineshape',...        %48
+                    'sfi_tools',...                     %49
                         };
 %plugInVec = [21, 26, 34, 35, 38];
 plugInVec = [47];
@@ -486,7 +487,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_BEC_rydberg_lifetimes';
+analyPrefix     = '_BEC_rydberg_lifetime';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,

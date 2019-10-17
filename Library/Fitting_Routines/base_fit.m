@@ -19,7 +19,9 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
         'PlotAll', false,...
         'PlotAllAvgs', false, ...
         'CoeffNames', {{}},...
-        'CoeffUnits', {{}});
+        'CoeffUnits', {{}},...
+        'YAxisScale', 'linear',...
+        'XAxisScale', 'linear');
     
     if nargin > 7
         opts = fieldnames(useroptions);
@@ -50,6 +52,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
     coeffNames = options.CoeffNames;
     coeffUnits = options.CoeffUnits;
     
+    xAxisScale = options.XAxisScale;
+    yAxisScale = options.YAxisScale;
     %%%%% do the fitting for each dataset %%%%%
     
     if plotIndivFits
@@ -86,6 +90,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 xlabel(xlabeltext);
                 ylabel(ylabeltext);
                 legend(num2str(analyVar.timevectorAtom(i)));
+                set(gca, 'YScale', yAxisScale);
+                set(gca, 'XScale', xAxisScale);
             hold off
         end
         
@@ -99,6 +105,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 ylabel(ylabeltext);
             end
             legend(num2str(analyVar.timevectorAtom));
+            set(gca, 'YScale', yAxisScale);
+            set(gca, 'XScale', xAxisScale);
             hold off
         end
         
@@ -138,6 +146,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 xlabel(xlabeltext);
                 ylabel(ylabeltext);
                 legend(num2str(scanIDs(i)));
+                set(gca, 'YScale', yAxisScale);
+                set(gca, 'XScale', xAxisScale);
             hold off
             
             
@@ -152,8 +162,10 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 xlabel(xlabeltext);
                 ylabel(ylabeltext);
                 legend(num2str(scanIDs(i)));
+                set(gca, 'YScale', yAxisScale);
+                set(gca, 'XScale', xAxisScale);
             end
-            legend(num2str(analyVar.timevectorAtom));
+            legend(num2str(scanIDs));
             hold off
         end
         
