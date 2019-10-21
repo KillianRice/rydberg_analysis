@@ -170,6 +170,7 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
         end
         
     end
+   
 end
     
 
