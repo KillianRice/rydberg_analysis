@@ -3,7 +3,7 @@ function out = density(analyVar, indivDataset, avgDataset)
     omega_z = 2*pi*523.818;
     omega_r = 2*pi*128.5;
     lambda = omega_z/omega_r;
-    omega_bar = 2*pi*74.9;%(omega_z*omega_r^2)^(1/3);
+    omega_bar = (omega_z*omega_r^2)^(1/3);
 
     figure;
     hold on;
