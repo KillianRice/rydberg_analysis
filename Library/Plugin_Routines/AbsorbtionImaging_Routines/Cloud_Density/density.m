@@ -3,7 +3,7 @@ function out = density(analyVar, indivDataset, avgDataset)
     omega_z = 2*pi*523.818;
     omega_r = 2*pi*128.5;
     lambda = omega_z/omega_r;
-    omega_bar = (omega_z*omega_r^2)^(1/3);
+    omega_bar = 2*pi*74.9;%(omega_z*omega_r^2)^(1/3);
 
     figure;
     hold on;
@@ -17,7 +17,8 @@ function out = density(analyVar, indivDataset, avgDataset)
         
         sig = cloud_sigma(omega_bar,temp,analyVar);
         
-        indivDataset{basename}.density = 1e-6 * number ./ ((2*pi)^(3/2)*sig.^3);
+        indivDataset{basename}.density = 1e-6 * number./temp.^(3/2) *...
+            1/(2*sqrt(2)*pi^(3/2)/(analyVar.mass*omega_bar^2/analyVar.kBoltz)^(3/2));
         
         plot(indivDataset{basename}.imagevcoAtom,indivDataset{basename}.density,...
             'LineStyle','-',...
@@ -62,43 +63,44 @@ function out = density(analyVar, indivDataset, avgDataset)
     ylabel('Average Cloud Density (cm^{-3})');
     legend(num2str(scanIDs))
     hold off;
-   
-    figure;
-    hold on;
-    for i = 1:analyVar.numBasenamesAtom
-        plot(indivDataset{i}.imagevcoAtom, indivDataset{i}.t_over_tf,...
-            'LineStyle','-',...
-            'Marker', 'o',...
-            'MarkerSize', analyVar.markerSize,...
-            'MarkerFaceColor', analyVar.COLORS(i,:),...
-            'MarkerEdgeColor', 'none',...
-            'Color', analyVar.COLORS(i,:));
+    
+    if analyVar.isotope == 87
+        figure;
+        hold on;
+        for i = 1:analyVar.numBasenamesAtom
+            plot(indivDataset{i}.imagevcoAtom, indivDataset{i}.t_over_tf,...
+                'LineStyle','-',...
+                'Marker', 'o',...
+                'MarkerSize', analyVar.markerSize,...
+                'MarkerFaceColor', analyVar.COLORS(i,:),...
+                'MarkerEdgeColor', 'none',...
+                'Color', analyVar.COLORS(i,:));
+        end
+
+        xlabel(analyVar.xDataLabel);
+        ylabel('T/T_F, assuming a polarized sample');
+        legend(num2str(analyVar.timevectorAtom))
+        hold off;
+
+        figure;
+        hold on;
+        for i = 1:analyVar.numBasenamesAtom
+            plot(indivDataset{i}.imagevcoAtom, indivDataset{i}.t_over_tf*10^(1/3),...
+                'LineStyle','-',...
+                'Marker', 'o',...
+                'MarkerSize', analyVar.markerSize,...
+                'MarkerFaceColor', analyVar.COLORS(i,:),...
+                'MarkerEdgeColor', 'none',...
+                'Color', analyVar.COLORS(i,:));
+        end
+
+        xlabel(analyVar.xDataLabel);
+        ylabel('T/T_F, assuming an unpolarized sample');
+        legend(num2str(analyVar.timevectorAtom))
+        hold off;
     end
     
-    xlabel(analyVar.xDataLabel);
-    ylabel('T/T_F, assuming a polarized sample');
-    legend(num2str(analyVar.timevectorAtom))
-    hold off;
-    
-    figure;
-    hold on;
-    for i = 1:analyVar.numBasenamesAtom
-        plot(indivDataset{i}.imagevcoAtom, indivDataset{i}.t_over_tf*10^(1/3),...
-            'LineStyle','-',...
-            'Marker', 'o',...
-            'MarkerSize', analyVar.markerSize,...
-            'MarkerFaceColor', analyVar.COLORS(i,:),...
-            'MarkerEdgeColor', 'none',...
-            'Color', analyVar.COLORS(i,:));
-    end
-    
-    xlabel(analyVar.xDataLabel);
-    ylabel('T/T_F, assuming an unpolarized sample');
-    legend(num2str(analyVar.timevectorAtom))
-    hold off;
-    
-    
-    
+    out.analyVar = analyVar;
     out.indivDataset = indivDataset;
     out.avgDataset = avgDataset;
 end
