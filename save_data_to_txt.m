@@ -21,6 +21,27 @@ function [ files ] = save_data_to_txt( analyVar, indivDataset, avgDataset )
             fclose(outfile);
         end
         
+        if length(analyVar.timevectorAtom) > 1
+           
+            [xavg, yavg, yerr] = get_averages(analyVar, indivDataset, avgDataset, indVarField, depVarField{j});
+            scanIDs = analyVar.uniqScanList;
+            
+            for i = 1:length(scanIDs)
+            
+                if size(xavg{i}) ~= size(yavg{i})
+                    warning(['Dimensions of xdata, ydata not the same. ' ...
+                        'Trying to fix, but may lead to unpredictable results.'])
+                    yavg{i} = yavg{i}';
+                end
+            
+                outfile = fopen(strcat('./out/',analyVar.dataDirName,'_',num2str(scanIDs(i)),'_',depVarField{j},'.txt'),'w');
+                fprintf(outfile, '%0.30e\t%0.30e\t%0.30e\n', [xavg{i} yavg{i} yerr{i}]');
+                fclose(outfile);
+            
+            end
+            
+        end
+        
     end
 
 

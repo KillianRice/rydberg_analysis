@@ -14,10 +14,10 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
         'FitLB', [],...
         'FitUB', [],...
         'FitOptions', struct('Display','off'),...
-        'PlotInitialGuess', false, ...
+        'PlotInitialGuess', true, ...
         'InitialGuessPlotFunction', @defaultInitialGuessPlot,...
-        'PlotAll', false,...
-        'PlotAllAvgs', false, ...
+        'PlotAll', true,...
+        'PlotAllAvgs', true, ...
         'CoeffNames', {{}},...
         'CoeffUnits', {{}},...
         'YAxisScale', 'linear',...
@@ -54,12 +54,13 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
     
     xAxisScale = options.XAxisScale;
     yAxisScale = options.YAxisScale;
-    %%%%% do the fitting for each dataset %%%%%
+    
     
     if plotIndivFits
     
         [xdata, ydata] = getxy(indVarField, depVarField, analyVar, indivDataset, avgDataset);
         coeffs = cell(analyVar.numBasenamesAtom,1);
+        uncs = cell(analyVar.numBasenamesAtom,1);
 
         for i = 1:analyVar.numBasenamesAtom
 
@@ -72,7 +73,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
 
             % fit the data
             initialguess = x0(xdata{i},ydata{i});
-            coeffs{i} = lsqcurvefit(form,initialguess,xdata{i},ydata{i},fitLB,fitUB,fitOptions);
+            [coeffs{i},~,~,CovB,rchisq,~] = nlinfit(xdata{i},ydata{i},form,initialguess);
+            uncs{i} = sqrt(diag(CovB)); % 1 sigma uncertainty from covariance matrix
             
             % plot the data
             fitx = linspace(min(xdata{i}),max(xdata{i}),1000);
@@ -84,14 +86,16 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 end
                 myDataPlot(xdata{i},ydata{i},i,analyVar);
                 myFitLinePlot(fitx, form(coeffs{i},fitx),i,analyVar);
-                myAnnotate(coeffs{i})
-                disp(i)
+                myAnnotate(coeffs{i},uncs{i}, coeffNames, coeffUnits);
+                disp(strcat(['Fit data for ' num2str(analyVar.timevectorAtom(i))]))
                 disp(coeffs{i})
                 xlabel(xlabeltext);
                 ylabel(ylabeltext);
                 legend(num2str(analyVar.timevectorAtom(i)));
                 set(gca, 'YScale', yAxisScale);
                 set(gca, 'XScale', xAxisScale);
+                title(strcat(['\chi^2_{\nu} = ',num2str(rchisq),' \nu = ',...
+                    num2str(length(ydata{i})-length(coeffs{i}))]));
             hold off
         end
         
@@ -117,8 +121,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
         [xavg, yavg, yerr] = get_averages(analyVar, indivDataset, avgDataset, indVarField, depVarField);
         scanIDs = analyVar.uniqScanList;
         avg_coeffs = cell(length(scanIDs),1);
-        avg_err = cell(length(scanIDs),1);
-        
+        avg_unc = cell(length(scanIDs),1);
+                
         for i = 1:length(scanIDs)
             
             if size(xavg{i}) ~= size(yavg{i})
@@ -129,9 +133,10 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
             
             % fit the data
             initialguess = x0(xavg{i}, yavg{i});
-            [avg_coeffs{i},~,residual,~,~,~,J] = lsqcurvefit(form,initialguess,xavg{i},yavg{i},fitLB,fitUB,fitOptions);
-            conf = nlparci(avg_coeffs{i},residual,'jacobian',J); % returns 95% CI bounds
-            avg_err{i} = (conf(:,2) - conf(:,1)) / 4; % computes 1 sigma uncertainty from 95% CI
+            
+            weights = 1./(yerr{i} + 1).^2;
+            [avg_coeffs{i},~,~,CovB,rchisq,~] = nlinfit(xavg{i},yavg{i},form,initialguess,'Weights',weights);
+            avg_unc{i} = sqrt(diag(CovB));
             % plot the data
             fitx = linspace(min(xavg{i}),max(xavg{i}),1000);
             
@@ -142,12 +147,14 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 end
                 myAvgDataPlot(xavg{i},yavg{i},yerr{i},i,analyVar);
                 myFitLinePlot(fitx, form(avg_coeffs{i},fitx),i,analyVar);
-                myAnnotate(avg_coeffs{i}, avg_err{i}, coeffNames, coeffUnits)
+                myAnnotate(avg_coeffs{i}, avg_unc{i}, coeffNames, coeffUnits);
                 xlabel(xlabeltext);
                 ylabel(ylabeltext);
                 legend(num2str(scanIDs(i)));
                 set(gca, 'YScale', yAxisScale);
                 set(gca, 'XScale', xAxisScale);
+                title(strcat(['\chi^2_{\nu} = ',num2str(rchisq),' \nu = ',...
+                    num2str(length(xavg{i})-length(avg_coeffs{i}))]));
             hold off
             
             
@@ -173,7 +180,6 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
    
 end
     
-
 function h = defaultDataPlot(x,y,i,analyVar)
     h = plot(x,y,...
     'LineStyle','none',...
