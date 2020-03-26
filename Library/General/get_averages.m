@@ -36,7 +36,7 @@ function [ x,y,yerr ] = get_averages( analyVar, indivDataset, avgDataset, indVar
                 end
             end
             y{id}(i) = mean(tempy(1:num));
-            yerr{id}(i) = std(tempy(1:num));
+            yerr{id}(i) = std(tempy(1:num))/sqrt(num);
         end
     end
 
