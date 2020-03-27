@@ -96,9 +96,10 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'sfi_tools',...                     %49
                     'bec_rydberg_lifetime_no_sr2',...   %50
                     'bec_decay_lifetime_roi',...        %51
+                    'voigt',...                        %52
                         };
 %plugInVec = [21, 26, 34, 35, 38];
-plugInVec = [51];
+plugInVec = [38,52];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -119,7 +120,7 @@ roi2_minimum = 85;
 roi2_maximum = 97;
 
 %%%% Atom cloud properties
-sampleType     = 'BEC';  % Options are Thermal, BEC, or Lattice
+sampleType     = 'Thermal';  % Options are Thermal, BEC, or Lattice
 isotope        = 84; % Isotope mass used to select applicable models for fitting. Options are 84, 86, or 88 (87 not currently supported)
 detuning       = 0;  % s^-1, image beam detuning (as of 7/1/15)
 pureSample     = 1;  % Flags whether BEC samples have a thermal fraction present or not (ignored for Thermal and Lattice samples)
@@ -489,7 +490,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_BEC_rydberg_lifetime';
+analyPrefix     = '_84_88_g2';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,

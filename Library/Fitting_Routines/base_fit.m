@@ -1,5 +1,7 @@
 function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarField, depVarField, x0, useroptions)
-       
+    
+    st = dbstack;
+    call = st(2).name;
     %%%%% set up options and plotting functions %%%%%
     options = struct(...
         'DataPlotFunction', @defaultDataPlot,...
@@ -21,7 +23,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
         'CoeffNames', {{}},...
         'CoeffUnits', {{}},...
         'YAxisScale', 'linear',...
-        'XAxisScale', 'linear');
+        'XAxisScale', 'linear',...
+        'FitTitle', call);
     
     if nargin > 7
         opts = fieldnames(useroptions);
@@ -54,6 +57,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
     
     xAxisScale = options.XAxisScale;
     yAxisScale = options.YAxisScale;
+    
+    fitTitle = options.FitTitle;
     
     
     if plotIndivFits
@@ -94,7 +99,7 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 legend(num2str(analyVar.timevectorAtom(i)));
                 set(gca, 'YScale', yAxisScale);
                 set(gca, 'XScale', xAxisScale);
-                title(strcat(['\chi^2_{\nu} = ',num2str(rchisq),' \nu = ',...
+                title(strcat([fitTitle, ' \chi^2_{\nu} = ',num2str(rchisq),' \nu = ',...
                     num2str(length(ydata{i})-length(coeffs{i}))]));
             hold off
         end
@@ -153,7 +158,7 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 legend(num2str(scanIDs(i)));
                 set(gca, 'YScale', yAxisScale);
                 set(gca, 'XScale', xAxisScale);
-                title(strcat(['\chi^2_{\nu} = ',num2str(rchisq),' \nu = ',...
+                title(strcat([fitTitle, ' \chi^2_{\nu} = ',num2str(rchisq),' \nu = ',...
                     num2str(length(xavg{i})-length(avg_coeffs{i}))]));
             hold off
             
