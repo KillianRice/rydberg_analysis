@@ -61,6 +61,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
     
     fitTitle = options.FitTitle;
     
+    weighting = options.Statistics;
+    
     
     if plotIndivFits
     
@@ -124,7 +126,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
     
     if length(analyVar.timevectorAtom) > 1 && plotAvgFits
         
-        [xavg, yavg, yerr] = get_averages(analyVar, indivDataset, avgDataset, indVarField, depVarField);
+        [xavg, yavg, yerr] = get_averages(analyVar, indivDataset, avgDataset,...
+            indVarField, depVarField, weighting);
         scanIDs = analyVar.uniqScanList;
         avg_coeffs = cell(length(scanIDs),1);
         avg_unc = cell(length(scanIDs),1);
@@ -141,7 +144,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
             initialguess = x0(xavg{i}, yavg{i});
             
             weights = 1./(yerr{i} + 1).^2;
-            [avg_coeffs{i},~,~,CovB,rchisq,~] = nlinfit(xavg{i},yavg{i},form,initialguess,'Weights',weights);
+            [avg_coeffs{i},~,~,CovB,rchisq,~] = nlinfit(xavg{i},yavg{i},form,initialguess,...
+                'Weights',weights);
             avg_unc{i} = sqrt(diag(CovB));
             % plot the data
             fitx = linspace(min(xavg{i}),max(xavg{i}),1000);
