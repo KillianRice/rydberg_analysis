@@ -1,5 +1,6 @@
 function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarField, depVarField, x0, useroptions)
     
+    debug = true;
     st = dbstack;
     call = st(2).name;
     %%%%% set up options and plotting functions %%%%%
@@ -142,6 +143,14 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
             
             % fit the data
             initialguess = x0(xavg{i}, yavg{i});
+            
+            if debug
+                figure
+                hold on
+                plot(xavg{i},yavg{i},'o');
+                plot(xavg{i},form(initialguess,xavg{i}));
+                hold off;
+            end
             
             weights = 1./(yerr{i} + 1).^2;
             [avg_coeffs{i},~,~,CovB,rchisq,~] = nlinfit(xavg{i},yavg{i},form,initialguess,...

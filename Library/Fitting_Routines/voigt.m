@@ -31,7 +31,7 @@ function funcOut = voigt(analyVar, indivDataset, avgDataset)
         initialguess(3) = sqrt(sum((xdata-initialguess(2)).^2))/length(xdata);
         initialguess(4) = initialguess(3);
         initialguess(5) = min(ydata);
-        initialguess(1) = max(ydata);% * sqrt(2*pi) * initialguess(3);
+        initialguess(1) = max(ydata) * 2;%sqrt(2*pi) * initialguess(3);
     end
 
 
@@ -69,7 +69,8 @@ function funcOut = voigt(analyVar, indivDataset, avgDataset)
         'CoeffNames', {{'Amplitude', 'Line Center', 'Gaussian FWHM', 'Lorentzian FWHM', 'Offset'}},...
         'CoeffUnits', {{'','MHz','MHz','MHz',''}},...
         'AnnotateFunction', @myAnnotate,...
-        'PlotInitialGuess', false);
+        'PlotInitialGuess', false,...
+        'Statistics', 'poisson');
     
     base_fit(analyVar, indivDataset, avgDataset, @form, indVarField, depVarField, @x0, options)
 

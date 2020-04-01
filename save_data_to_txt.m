@@ -23,7 +23,7 @@ function [ files ] = save_data_to_txt( analyVar, indivDataset, avgDataset )
         
         if length(analyVar.timevectorAtom) > 1
            
-            [xavg, yavg, yerr] = get_averages(analyVar, indivDataset, avgDataset, indVarField, depVarField{j});
+            [xavg, yavg, yerr] = get_averages(analyVar, indivDataset, avgDataset, indVarField, depVarField{j}, 'poisson');
             scanIDs = analyVar.uniqScanList;
             
             for i = 1:length(scanIDs)

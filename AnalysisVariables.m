@@ -96,10 +96,11 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'sfi_tools',...                     %49
                     'bec_rydberg_lifetime_no_sr2',...   %50
                     'bec_decay_lifetime_roi',...        %51
-                    'voigt',...                        %52
+                    'voigt',...                        %52 % voigt profile
+                    'doublevoigt',...                  %53 % voigt profile with fixed center voigt contribution
                         };
 %plugInVec = [21, 26, 34, 35, 38];
-plugInVec = [38,52];
+plugInVec = [26];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
