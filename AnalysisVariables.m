@@ -97,9 +97,10 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'bec_rydberg_lifetime_no_sr2',...   %50
                     'bec_decay_lifetime_roi',...        %51
                     'voigt',...                        %52
+                    'lossspectrafit',...
                         };
-%plugInVec = [21, 26, 34, 35, 38];
-plugInVec = [38,52];
+plugInVec = [21, 26];
+%plugInVec = [21,26,33,34];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
@@ -490,7 +491,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_84_88_g2';
+analyPrefix     = '_mmwave_transitions_3photon';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
