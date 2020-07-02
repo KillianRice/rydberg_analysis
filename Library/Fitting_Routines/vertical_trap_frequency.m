@@ -77,7 +77,7 @@ function h = myDataPlot(x,y,i,analyVar)
     'Color', analyVar.COLORS(i,:));
 end
 
-function an = myAnnotate(coeffs)
+function an = myAnnotate(coeffs,uncs,coeffNames,coeffUnits)
     dim = [0.2, 0.2, 0.3, 0.3];
     str = strcat('Trap Frequency: ', num2str(coeffs(2),'%0.2f Hz'));
     an = annotation('textbox', dim, 'String', str, 'FitBoxToText', 'on',...
