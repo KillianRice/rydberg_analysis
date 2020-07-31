@@ -99,7 +99,7 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'voigt',...                         %52
                     'lossspectrafit',...                %53
                         };
-plugInVec = [21, 26, 53];
+plugInVec = [36, 37, 52];
 %plugInVec = [21,26,33,34];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
@@ -115,10 +115,10 @@ end
 % EXPERIMENTAL OPTIONS AND SETTINGS
 %%-----------------------------------------------------------------------%%
 %%%% MCS ROI select options - selects the roi to perform SFI integral upon
-roi1_minimum = 97;
-roi1_maximum = 120;
-roi2_minimum = 85;
-roi2_maximum = 97;
+roi1_minimum = 11;
+roi1_maximum = 83;
+roi2_minimum = 84;
+roi2_maximum = 200;
 
 %%%% Atom cloud properties
 sampleType     = 'Thermal';  % Options are Thermal, BEC, or Lattice
@@ -491,7 +491,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_mmwave_transitions_3photon';
+analyPrefix     = '_mmwave_spectroscopy';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
