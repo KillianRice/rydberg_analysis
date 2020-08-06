@@ -98,8 +98,11 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'bec_decay_lifetime_roi',...        %51
                     'voigt',...                         %52
                     'lossspectrafit',...                %53
+                    'rabi_oscillation_fit'...           %54
+                    'Autler_Townes_fit'...              %55
+                    'lorentzian_lineshape'...           %56
                         };
-plugInVec = [36, 37, 52];
+plugInVec = [36, 37, 56];
 %plugInVec = [21,26,33,34];
 
 UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
