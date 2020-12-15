@@ -9,9 +9,11 @@ function [files] = save_data_to_txt_ver3(analyVar, indivDataset, avgDataset)
     use_dac = 1;
     use_labview = 1;
     use_images = analyVar.UseImages;
+    use_mcs = analyVar.UseMCS;
     
     indVarField = {'imagevcoAtom'};
-    depVarField = {'sfiIntegral', 'wavemeterAtom', 'wavemeterBack'};
+    %depVarField = {'sfiIntegral', 'wavemeterAtom', 'wavemeterBack'};
+    depVarField = {'wavemeterAtom', 'wavemeterBack'};
     
     %{
     indivBatch_header = {
@@ -59,7 +61,7 @@ function [files] = save_data_to_txt_ver3(analyVar, indivDataset, avgDataset)
         };
     
     image_header = {
-        'winTotnum',...
+        'winTotNum',...
         'atomTempX',...
         'atomTempY'
         };
@@ -91,7 +93,7 @@ function [files] = save_data_to_txt_ver3(analyVar, indivDataset, avgDataset)
         
         if use_images
             for j = 1:length(image_header)
-                out = [out, table(indivDataset{scan_idx}.(image_header{j}), 'VariableNames', image_header(j))];
+                out = [out, table(transpose(indivDataset{scan_idx}.(image_header{j})), 'VariableNames', image_header(j))];
             end
         end
         
@@ -104,20 +106,22 @@ function [files] = save_data_to_txt_ver3(analyVar, indivDataset, avgDataset)
     
     %%%%%%%%%%%% adding code for generating the mcsfiles in folders in the
     %%%%%%%%%%%% out folder of Analysis dir.
-    for i = 1:analyVar.numBasenamesAtom  %% Loop over the batch files.
-        for j=1:indivDataset{i}.CounterMCS 
-            bin_num = indivDataset{i}.mcsSpectra{j}(:,1);
-            MCScount = indivDataset{i}.mcsSpectra{j}(:,2);
-            T = table(bin_num,MCScount);
-            outputfoldername = strcat(analyVar.basenamevectorAtom{i},'_mcs_files/');
-            if ~exist(strcat(outputdir,outputfoldername), 'dir')
-                mkdir(outputdir,outputfoldername)
+    if use_mcs
+        for i = 1:analyVar.numBasenamesAtom  %% Loop over the batch files.
+            for j=1:indivDataset{i}.CounterMCS 
+                bin_num = indivDataset{i}.mcsSpectra{j}(:,1);
+                MCScount = indivDataset{i}.mcsSpectra{j}(:,2);
+                T = table(bin_num,MCScount);
+                outputfoldername = strcat(analyVar.basenamevectorAtom{i},'_mcs_files/');
+                if ~exist(strcat(outputdir,outputfoldername), 'dir')
+                    mkdir(outputdir,outputfoldername)
+                end
+                %mkdir(outputdir,outputfoldername)
+                outputfilename = strcat(analyVar.basenamevectorAtom{i},'_',num2str(j),'_.csv');
+                outputdestination = strcat(outputdir,outputfoldername,outputfilename);
+                disp(outputdestination);
+                writetable(T,outputdestination);
             end
-            %mkdir(outputdir,outputfoldername)
-            outputfilename = strcat(analyVar.basenamevectorAtom{i},'_',num2str(j),'_.csv');
-            outputdestination = strcat(outputdir,outputfoldername,outputfilename);
-            disp(outputdestination);
-            writetable(T,outputdestination);
         end
     end
 end

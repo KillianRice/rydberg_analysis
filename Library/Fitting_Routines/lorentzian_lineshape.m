@@ -7,7 +7,7 @@ function funcOut = lorentzian_lineshape(analyVar, indivDataset, avgDataset)
     form = @(coeffs, x) coeffs(1)...
         .*(coeffs(3).^2)./((x-coeffs(2)).^2+coeffs(3).^2) + coeffs(4);
     indVarField = 'imagevcoAtom'; % independent variable
-    depVarField = 'sfiIntegral_roi1_ratio'; % dependent variable
+    depVarField = 'sfiIntegral'; % dependent variable
     
     %% initial guess code
     function initialguess = x0(xdata, ydata)
