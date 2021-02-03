@@ -1,4 +1,4 @@
-function [files] = save_data_to_txt_ver3(analyVar, indivDataset, avgDataset)
+function [files] = save_data_to_txt_ver4(analyVar, indivDataset, avgDataset)
 % 2019/02/07 - work-in-progress towards a more versatile function for
 %              writing output data. 
     
@@ -12,8 +12,8 @@ function [files] = save_data_to_txt_ver3(analyVar, indivDataset, avgDataset)
     use_mcs = analyVar.UseMCS;
     
     indVarField = {'imagevcoAtom'};
-    %depVarField = {'sfiIntegral', 'wavemeterAtom', 'wavemeterBack'};
-    depVarField = {'wavemeterAtom', 'wavemeterBack'};
+    depVarField = {'sfiIntegral', 'wavemeterAtom', 'wavemeterBack'};
+    %depVarField = {'wavemeterAtom', 'wavemeterBack'};
     
     %{
     indivBatch_header = {
