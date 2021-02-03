@@ -102,11 +102,11 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'Autler_Townes_fit'...              %55
                     'lorentzian_lineshape'...           %56
                         };
-plugInVec = [34,35];
-%plugInVec = [21,26,33,34,35,52];
+%plugInVec = [34,35];
+plugInVec = [21,26,33,34];
 
-UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
-UseMCS = 0; % set to 1 to use mcs data, set to 0 to ignore mcs data
+UseImages = 0;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
+UseMCS = 1; % set to 1 to use mcs data, set to 0 to ignore mcs data
 UseWavemeter = 0; % set to 1 to plot with wavemeter reading on the x axis, 0 for independent var
 % Common Plotting flags
 
@@ -494,7 +494,7 @@ rmpath([pwd filesep 'Library' filesep 'Archive']);
 
 % Define default folder names for directory heirarchy
 NeutExpDir      = 'Data';
-analyPrefix     = '_84_88_g2';
+analyPrefix     = '_84-84_g2';
 analyOutputName = 'Analysis';
 
 %Two assumptions are made here,
