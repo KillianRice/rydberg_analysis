@@ -11,24 +11,28 @@ function funcOut = horizontal_trap_frequency(analyVar, indivDataset, avgDataset)
     % coeffs(5): Offset
     % x: time (ms)
     
-    form = @(coeffs, x) coeffs(1) * sin(2*pi*coeffs(2)* x / 1000 + coeffs(3)) .* exp(-coeffs(4)*x / 1000) + coeffs(5); % your fit function here 
+    %form = @(coeffs, x) coeffs(1) * sin(2*pi*coeffs(2)* x / 1000 + coeffs(3)) .* exp(-coeffs(4)*x / 1000) + coeffs(5); % your fit function here 
+    form = @(coeffs, x) coeffs(1) * sin(2*pi*coeffs(2)* x / 1000 + coeffs(3)) .* exp(-coeffs(4)*x / 1000) + coeffs(5)*x + coeffs(6); % your fit function here 
     
     indVarField = 'imagevcoAtom'; % independent variable
-    depVarField = 'cntrX'; % dependent variable
+    depVarField = 'cloudRadX'; % dependent variable
     
     %% initial guess code
     % fill in this function to estimate the values of the fit parameters,
     % alternatively you can just have thist function return a constant
     % vector if you don't have a simple way of obtaining an initial guess
-    function initialguess = x0(xdata, ydata)
-        initialguess = zeros(5,1);
+   function initialguess = x0(xdata, ydata)
+%         initialguess = zeros(5,1);
+        initialguess = zeros(6,1);
         initialguess(1) = (max(ydata)-min(ydata))/2;
-        initialguess(2) = 82;
-        initialguess(3) = 0;
-        initialguess(4) = 0;
-        initialguess(5) = mean(ydata);
+        initialguess(2) = 100;
+        initialguess(3) = 1.5;
+        initialguess(4) = 100;
+        initialguess(5) = 0.1;
+        initialguess(6) = mean(ydata);
+
         
-        disp(initialguess)
+%         disp(initialguess)
     end
 
 
