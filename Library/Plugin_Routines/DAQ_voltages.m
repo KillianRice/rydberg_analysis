@@ -4,7 +4,7 @@ function funcOut = DAQ_voltages(analyVar, indivDataset, avgDataset)
     
     time_axis = 1; % if 1 plots against time axis, else plots against imagevcoatom
 
-    use_channels = [1 1 1 0 0 1 0 0]; % which channels to plot
+    use_channels = [1 0 0 0 0 1 0 0]; % which channels to plot
     
     channel_names = {'UV PD Mon (V)',...        % AI 0
                     'Red Spec Power Mon (V)',...% AI 1
@@ -47,6 +47,7 @@ function funcOut = DAQ_voltages(analyVar, indivDataset, avgDataset)
                     else
                         myplot(indivDataset{j}.imagevcoAtom,indivDataset{j}{i+2},analyVar,j);
                     end
+                    myannotate(indivDataset{j}.daq_voltages{i+2});
                 end
             end
             if time_axis == 1
@@ -79,4 +80,14 @@ end
                 'MarkerFaceColor', analyVar.COLORS(i,:),...
                 'MarkerEdgeColor', 'none',...
                 'Color', analyVar.COLORS(i,:));
-end
+    end
+
+    function an = myannotate(xarray)
+        dim = [.2 .6 .3 .3];
+        meanvalue = mean(xarray);
+        stdvalue = std(xarray);
+        string = ['Mean = ',num2str(meanvalue),'V',...
+            newline,'Std = ',num2str(stdvalue),'V'];
+        an = annotation('textbox', dim, 'String', string,...
+        'FitBoxToText', 'on', 'BackgroundColor', 'white');
+    end
