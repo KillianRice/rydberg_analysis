@@ -101,6 +101,7 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'rabi_oscillation_fit'...           %54
                     'Autler_Townes_fit'...              %55
                     'lorentzian_lineshape'...           %56
+                    'normalize_plot'...                 %57
                         };
 %plugInVec = [34,35];
 plugInVec = [21,26,33,34];
