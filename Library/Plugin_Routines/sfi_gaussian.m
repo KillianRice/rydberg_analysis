@@ -51,7 +51,7 @@ function funcOut = sfi_gaussian(analyVar, indivDataset, avgDataset)
         'CoeffNames', {{'Amplitude', 'Line Center', 'FWHM', 'Offset'}},...
         'CoeffUnits', {{'','MHz','MHz',''}},...
         'AnnotateFunction', @myAnnotate,...
-        'Statistics', 'poisson');
+        'Statistics', 'gaussian');
     
     base_fit(analyVar, indivDataset, avgDataset, form, indVarField, depVarField, @initial_guess, options)
 
@@ -92,12 +92,15 @@ end
 
 function an = myAnnotate(coeffs, err, coeffNames, coeffUnits)
     
-    dim = [.7 .5 .3 .3];
+    dim = [.6 .5 .3 .3];
     
     % convert to relevant parameters
     coeffs(3) = coeffs(3) * 2*sqrt(2*log(2));
     err(3) = err(3) * 2*sqrt(2*log(2));
-    
+    % evaluating the integral from the fit coefficients.
+    lineintegral = coeffs(1)*coeffs(3)*sqrt(2*pi); % amp*FWHM*Sqrt(2*Pi) = Gaussian integral
+    lineintegral_err = lineintegral*(err(3)/coeffs(3)+ err(1)/coeffs(1));
+    %%%
     if isempty(coeffNames)
         for i = 1:numel(coeffs)
             coeffNames{i} = ['Coeff ', num2str(i)];
@@ -110,7 +113,7 @@ function an = myAnnotate(coeffs, err, coeffNames, coeffUnits)
         end
     end
     
-    strs = cell(numel(coeffs),1);
+    strs = cell(numel(coeffs)+1,1);
     for i = 1:numel(coeffs)
         if i < numel(coeffs)
             strs{i} = [coeffNames{i}, ': ', unc_string(coeffs(i),err(i)),...
@@ -120,6 +123,8 @@ function an = myAnnotate(coeffs, err, coeffNames, coeffUnits)
                 ' ', coeffUnits{i}];
         end
     end
+    %%% adding line integral string.
+    strs{i+1} = [newline,'LineIntegral', ': ', unc_string(lineintegral,lineintegral_err)];
     
     an = annotation('textbox', dim, 'String', strjoin(strs),...
         'FitBoxToText', 'on', 'BackgroundColor', 'white');
