@@ -1,4 +1,4 @@
-function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarField, depVarField, x0, useroptions)
+function [xav,yav,yer,coefflist,coefflist_err] = base_fit(analyVar, indivDataset, avgDataset, form, indVarField, depVarField, x0, useroptions)
     
     st = dbstack;
     call = st(2).name;
@@ -97,8 +97,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 myAnnotate(coeffs{i},uncs{i}, coeffNames, coeffUnits);
                 disp(strcat(['Fit data for ' num2str(analyVar.timevectorAtom(i))]))
                 disp(coeffs{i})
-                xlabel(xlabeltext);
-                ylabel(ylabeltext);
+                xlabel(xlabeltext,'Interpreter','none');
+                ylabel(ylabeltext,'Interpreter','none');
                 legend(num2str(analyVar.timevectorAtom(i)));
                 set(gca, 'YScale', yAxisScale);
                 set(gca, 'XScale', xAxisScale);
@@ -158,8 +158,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
                 myAvgDataPlot(xavg{i},yavg{i},yerr{i},i,analyVar);
                 myFitLinePlot(fitx, form(avg_coeffs{i},fitx),i,analyVar);
                 myAnnotate(avg_coeffs{i}, avg_unc{i}, coeffNames, coeffUnits);
-                xlabel(xlabeltext);
-                ylabel(ylabeltext);
+                xlabel(xlabeltext,'Interpreter','none');
+                ylabel(ylabeltext,'Interpreter','none');
                 legend(num2str(scanIDs(i)));
                 set(gca, 'YScale', yAxisScale);
                 set(gca, 'XScale', xAxisScale);
@@ -176,8 +176,8 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
             for i = 1:length(scanIDs)
                 myAvgDataPlot(xavg{i},yavg{i},yerr{i},i,analyVar);
                 myFitLinePlot(fitx, form(avg_coeffs{i},fitx),i,analyVar);
-                xlabel(xlabeltext);
-                ylabel(ylabeltext);
+                xlabel(xlabeltext,'Interpreter','none');
+                ylabel(ylabeltext,'Interpreter','none');
                 legend(num2str(scanIDs(i)));
                 set(gca, 'YScale', yAxisScale);
                 set(gca, 'XScale', xAxisScale);
@@ -185,9 +185,13 @@ function funcOut = base_fit(analyVar, indivDataset, avgDataset, form, indVarFiel
             legend(num2str(scanIDs));
             hold off
         end
-        
+    xav = xavg;
+    yav = yavg;
+    yer = yerr;
+    coefflist = avg_coeffs;    
+    coefflist_err = avg_unc;
     end
-   
+  
 end
     
 function h = defaultDataPlot(x,y,i,analyVar)
