@@ -1,19 +1,13 @@
 function funcOut = threebodylossfit(analyVar, indivDataset, avgDataset)
     
-    %% Fit_Template - Joe Whalen 2019.10.02
-    % This function calls the base_fit script that does all of the fitting
-    % and displays all of the plots for a given fitting routine. To use
-    % this template, first save it as a new script with the name you want
-    % to give to your fit function. Next, fill in your fit form with an
-    % anonymous function handle with argumnents coeffs and x, coeffs is the
-    % vector of free fit parameters and x is the vector of x coordinates
-    % over which the function will be evaluated. Declare the independent
-    % and dependent variables to be fitted with indVarField and
-    % depVarField. These variables are strings that are the names of a
-    % field in indivDataset. Typically the indVarField is imagevcoAtom, the
-    % variable that was scanned during the experiment.
+    %% Description - Soumya Kanungo 2022.01.27
+    % This functions assumes the differential equation for loss rate as
+    % given in this paper but without the Temperature
+    % dependence.https://arxiv.org/pdf/physics/0304052.pdf. Also check
+    % OneNote page under IR/Lattice/1064nm lattice/2022/01/25
     
     form = @(coeffs, x) coeffs(3).*sqrt(-coeffs(2) + exp(-2*coeffs(1)^2))./sqrt(-coeffs(2) + exp(2*coeffs(1).*(x-coeffs(1)))) % your fit function here 
+    % coeffs(2) is gamma2 which corresponds to the 3-body loss rate.
     
     indVarField = 'imagevcoAtom'; % independent variable
     depVarField = 'winTotNum'; % dependent variable
