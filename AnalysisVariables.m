@@ -103,9 +103,10 @@ lcl_validFitLine = {'Spectrum_Fit',...                  %01
                     'lorentzian_lineshape'...           %56
                     'normalize_plot'...                 %57 normalizes plot based on atomic, dimer and trimer Rydberg lines.
                     'exponentialfit'...                 %58 exponential fit to field.
+                    'threebodylossfit'...               %59 double exponential fit to a depVarfield.
                         };
 %plugInVec = [34,35];
-plugInVec = [58];
+plugInVec = [59];
 
 UseImages = 1;%set to 1 to load image data. Set to 0 when images are not needed (possibly for MCS analysis).
 UseMCS = 0; % set to 1 to use mcs data, set to 0 to ignore mcs data
