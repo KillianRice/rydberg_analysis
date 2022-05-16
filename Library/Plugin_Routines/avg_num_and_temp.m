@@ -72,7 +72,7 @@ function funcOut = avg_num_and_temp(analyVar, indivDataset, avgDataset)
             histogram(allvectors{i})
             xlabel(fields{i});
             ylabel('Occurances');
-            myAnnotation(fields{i}, mean(allvectors{i}), std(allvectors{i}),0);
+            myAnnotation(fields{i}, mean(allvectors{i}), std(allvectors{i}),1);
         end
         
     end
@@ -97,8 +97,7 @@ function an = myAnnotation(field,mean,std,iter)
     0.4660    0.6740    0.1880
     0.3010    0.7450    0.9330
     0.6350    0.0780    0.1840];
-    an = annotation('textbox',dim,'String',str,'FitBoxToText','on','BackgroundColor',...
-        'white','Color',COLORS(iter,:));
+    an = annotation('textbox',dim,'String',str,'FitBoxToText','on','BackgroundColor','white','Color',COLORS(iter,:));
 end
 
 function h = myplot(x,y,analyVar,i)
